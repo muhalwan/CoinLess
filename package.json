@@ -1,28 +1,49 @@
 {
-  "name": "fp",
+  "name": "coinless",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "lint": "eslint ./ --fix",
+    "sulint": "eslint ./ --fix --fix-type suggestion"
   },
-  "author": "",
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "author": "CL",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.1",
-    "body-parser": "^1.20.0",
+    "animate.css": "^4.1.1",
+    "axios": "^0.27.2",
+    "bootstrap": "^5.1.3",
+    "bootstrap-icons": "^1.8.1",
+    "cheerio": "^1.0.0-rc.10",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "firebase-admin": "^10.2.0",
-    "firestore-sequelize": "^0.8.0",
-    "jsonwebtoken": "^8.5.1",
-    "mysql": "^2.18.1",
-    "mysql2": "^2.3.3",
-    "sequelize": "^6.19.0",
-    "sqlite3": "^5.0.5",
-    "uuid": "^8.3.2"
+    "ejs": "^3.1.7",
+    "express": "^4.9.8",
+    "hammerjs": "^2.0.8",
+    "https": "^1.0.0",
+    "jquery": "^3.6.0",
+    "jsonwebtoken": "8.5.1",
+    "materialize-css": "^1.0.0",
+    "moment": "2.29.3",
+    "mysql": "2.18.1",
+    "nanoid": "^3.3.4",
+    "pg": "8.7.3",
+    "url": "^0.11.0",
+    "uuid": "8.3.2"
   },
-  "devDependencies": {},
+  "engines": {
+    "node": ">=14.x"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.26.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/muhalwan/CoinLess.git"
