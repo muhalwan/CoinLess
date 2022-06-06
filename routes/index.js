@@ -4,12 +4,8 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const {nanoid} = require('nanoid');
 const router = express.Router();
-
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-
-const axios = require('axios');
-
 const moment = require('moment');
 const client = require('../db/conn.js');
 const config = require('../config');
@@ -17,23 +13,7 @@ const config = require('../config');
 
 router.use(jsonParser);
 
-router.get('/', (req, res, next) => {
-  res.render('/app/html/');
-});
-
-router.get('/register', (req, res, next) => {
-  res.sendFile('/app/html/register.html');
-});
-
-router.get('/login', (req, res, next) => {
-  res.sendFile('/app/html/login.html');
-});
-
-router.get('/kantin', (req, res, next) => {
-  res.sendFile('/app/html/kantin.html');
-});
-
-// nampilin semua pengguna
+// show all users
 router.get('/api/profile', verifyToken, (req, res, next) => {
   try {
     if (req.role === 'admin') {
@@ -219,7 +199,7 @@ router.post('/api/profile', async (req, res, next) => {
                           JSON.stringify(
                               {
                                 status: 200,
-                                message: 'Register user berhasil',
+                                message: 'Pendaftaran Berhasil',
                               },
                               null,
                               3,
@@ -231,7 +211,6 @@ router.post('/api/profile', async (req, res, next) => {
         },
     );
   } catch (error) {
-    // console.log(error);
     res.setHeader('Content-Type', 'application/json');
     res.status(500);
     return res
@@ -298,7 +277,7 @@ router.post('/api/login', async (req, res, next) => {
                   name: myname,
                   email: myemail,
                   role: myrole,
-                  cash: mycash,
+                  saldo: mycash,
                   uid: myuid,
                 },
                 config.secret,
@@ -310,7 +289,7 @@ router.post('/api/login', async (req, res, next) => {
                 .send(
                     JSON.stringify(
                         {
-                          status: 200,
+
                           jwt: token,
                         },
                         null,
@@ -389,7 +368,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
                     JSON.stringify(
                         {
                           status: 200,
-                          message: 'Topup berhasil',
+                          message: 'Top up berhasil',
                         },
                         null,
                         3,
@@ -483,7 +462,6 @@ router.get('/api/history/topup', verifyToken, async (req, res, next) => {
   }
 });
 
-// bayar menggunakan metamoney
 router.put('/api/pay', verifyToken, async (req, res, next) => {
   try {
     const {jumlah} = req.body;
@@ -575,32 +553,6 @@ router.put('/api/pay', verifyToken, async (req, res, next) => {
             ),
         );
   }
-});
-
-router.get('/tes', (req, res, next) => {
-  axios
-      .post('https://met4kantin.herokuapp.com/api/login', {
-        email: 'ab@mail.com',
-        pass: 'abyan',
-      })
-      .then((ress) => {
-        res.setHeader('Content-Type', 'application/json');
-        return res
-            .send(
-                JSON.stringify(
-                    {
-                      // status: 200,
-                      tes: 'berhasil axios',
-                    },
-                    null,
-                    3,
-                ),
-            )
-            .status(200);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
 });
 
 module.exports = router;

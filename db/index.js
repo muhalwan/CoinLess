@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
 const config = {
-    host: 'coinless.cluster-cfx4yrrlw52h.us-west-2.rds.amazonaws.com',
-    user: 'muhalwan',
+    host: 'coinlessdb.cfx4yrrlw52h.us-west-2.rds.amazonaws.com',
+    user: 'CoinLess_pg',
     password: 'asdfg278',
-    database: 'coinless',
+    database: 'coinlessdb',
 };
 
 const pool = mysql.createPool(config);

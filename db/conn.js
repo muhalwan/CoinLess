@@ -1,11 +1,11 @@
 const {Client} = require('pg');
 
 const client = new Client({
-  host: 'coinless.cluster-cfx4yrrlw52h.us-west-2.rds.amazonaws.com',
-  user: 'muhalwan',
-  port: 3306,
+  host: 'coinlessdb.cfx4yrrlw52h.us-west-2.rds.amazonaws.com',
+  user: 'CoinLess_pg',
+  port: 5432,
   password: 'asdfg278',
-  database: 'coinless',
+  database: 'coinlessdb',
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
