@@ -23,6 +23,8 @@ database.once('connected', () => {
 
 app.use(express.json());
 
-app.listen(3000, () => {
-    console.log(`Server Started at ${3000}`)
+const PORT = process.env.PORT 
+app.listen(PORT,(err)=>{
+    if (err) throw err;
+    console.log(`Listening on PORT ${PORT}`)
 })
