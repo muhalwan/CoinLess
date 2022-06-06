@@ -1,39 +1,28 @@
-const express = require('express')
-const app = express()
-const db = require('./config/database')
-const bodyParser = require('body-parser')
-const jsonParser = bodyParser.json()
-const verifyToken = require('./auth/verify').verifyToken
+require('dotenv').config();
 
-const dotenv = require('dotenv')
-dotenv.config()
+const express = require('express');
+const mongoose = require('mongoose');
+const mongoString = process.env.DATABASE_URL;
+const routes = require('./routes/routes');
+const app = express();
+const database = mongoose.connection;
 
-// Async Connection to Database
-try {
-    async function start(){
-        await db.authenticate();
-    }
-    console.log('Database connected...');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
+app.use('/api', routes)
 
-// Middleware
-const routes = require('./routes')  
-const users = require('./controllers/users')  
-const order = require('./controllers/order')  
-
-app.get("/",routes.index)
-app.get("/users",verifyToken,users.fetch)
-app.post("/register",jsonParser,users.register)
-app.post("/login",jsonParser,users.login)
-app.post("/topup",verifyToken,jsonParser,users.topup)
-app.post("/order",verifyToken,jsonParser,order.addOrder)
+mongoose.connect(mongoString);
 
 
-// Listening on port
-const PORT = process.env.PORT 
-app.listen(PORT,(err)=>{
-    if (err) throw err;
-    console.log(`Listening on PORT ${PORT}`)
+database.on('error', (error) => {
+    console.log(error)
+})
+
+database.once('connected', () => {
+    console.log('Database Connected');
+})
+
+
+app.use(express.json());
+
+app.listen(3000, () => {
+    console.log(`Server Started at ${3000}`)
 })
