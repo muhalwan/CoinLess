@@ -1,30 +1,22 @@
-require('dotenv').config();
-
 const express = require('express');
-const mongoose = require('mongoose');
-const mongoString = process.env.DATABASE_URL;
-const routes = require('./routes/routes');
+const bodyParser = require('body-parser');
+
+const jsonParser = bodyParser.json();
 const app = express();
-const database = mongoose.connection;
+const cookieParser = require('cookie-parser');
+const client = require('./db/conn');
 
-app.use('/api', routes)
-
-mongoose.connect(mongoString);
-
-
-database.on('error', (error) => {
-    console.log(error)
-})
-
-database.once('connected', () => {
-    console.log('Database Connected');
-})
+app.use(jsonParser);
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs');
+const PORT = process.env.PORT || 5000;
 
 
-app.use(express.json());
+const apiRoutes = require('./routes');
 
-const PORT = process.env.PORT 
-app.listen(PORT,(err)=>{
-    if (err) throw err;
-    console.log(`Listening on PORT ${PORT}`)
-})
+app.use('/', apiRoutes);
+
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+client.connect();
