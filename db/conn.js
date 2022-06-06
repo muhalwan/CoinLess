@@ -5,7 +5,7 @@ const client = new Client({
   user: 'CoinLess_pg',
   port: 5432,
   password: 'asdfg278',
-  database: 'coinlessdb',
+  database: 'postgres',
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
