@@ -1,11 +1,11 @@
-const {Client} = require('mysql');
+const {Client} = require('pg');
 
 const client = new Client({
-  host: 'bttogl4fpt9desspbkb0-mysql.services.clever-cloud.com',
-  user: 'uyuxgntwayyym696',
-  port: 3306,
-  password: 'WKvH2CvIrnpGOKGPYZLW',
-  database: 'bttogl4fpt9desspbkb0',
+  host: 'coinlessdb.cfx4yrrlw52h.us-west-2.rds.amazonaws.com',
+  user: 'CoinLess_pg',
+  port: 5432,
+  password: 'asdfg278',
+  database: 'postgres',
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,

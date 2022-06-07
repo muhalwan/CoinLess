@@ -1,10 +1,10 @@
-const mysql = require('mysql');
+const mysql = require('pg');
 
 const config = {
-  host: 'bttogl4fpt9desspbkb0-mysql.services.clever-cloud.com',
-  user: 'uyuxgntwayyym696',
-  password: 'WKvH2CvIrnpGOKGPYZLW',
-  database: 'bttogl4fpt9desspbkb0',
+  host: 'coinlessdb.cfx4yrrlw52h.us-west-2.rds.amazonaws.com',
+  user: 'CoinLess_pg',
+  password: 'asdfg278',
+  database: 'postgres',
 };
 
 const pool = mysql.createPool(config);
