@@ -67,16 +67,11 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
                   .send(
                       JSON.stringify(
                           {
-                            status: 200,
-                            message: 'User data',
-                            data: {
-                              name: myname,
-                              pass: mypass,
-                              email: myemail,
-                              role: myrole,
-                              cash: mycash,
-                              uid: myuid,
-                            },
+                            user_id: myuid,
+                            name: myname,
+                            pass: mypass,
+                            email: myemail,
+                            jumlah: mycash,    
                           },
                           null,
                           3,
@@ -410,7 +405,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 });
 
 // topup history
-router.get('/api/history/topup', verifyToken, async (req, res, next) => {
+router.get('/api/history', verifyToken, async (req, res, next) => {
   try {
     client.query('SELECT uid, name, jumlah, waktu, tanggal FROM mk_histori_topup WHERE uid = $1', [req.uid], (error, result) => {
       if (result.rows[0] !== undefined) {
