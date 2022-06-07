@@ -50,8 +50,8 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
       });
     } else {
       client.query(
-          'SELECT * FROM mk_pengguna WHERE uid = $1',
-          [req.uid],
+          'SELECT * FROM mk_pengguna WHERE user_id = $1',
+          [req.user_id],
           (error, result) => {
             console.log(result);
             if (result.rows[0] !== undefined) {
@@ -59,8 +59,8 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
               const myemail = result.rows[0].email;
               const mypass = result.rows[0].pass;
               const myrole = result.rows[0].role;
-              const mycash = result.rows[0].cash;
-              const myuid = result.rows[0].uid;
+              const mycash = result.rows[0].saldo;
+              const myuid = result.rows[0].user_id;
               res.setHeader('Content-Type', 'application/json');
               res.status(200);
               return res
@@ -181,10 +181,10 @@ router.post('/api/profile', async (req, res, next) => {
                     ),
                 );
           }
-          const uid = nanoid(16);
+          const user_id = nanoid(16);
           client.query(
-              'INSERT INTO mk_pengguna(uid, name, pass, email, role, cash) VALUES ($1, $2, $3, $4, \'user\', 10000)',
-              [uid, req.body.name, req.body.pass, req.body.email],
+              'INSERT INTO mk_pengguna(user_id, name, pass, email, role, saldo) VALUES ($1, $2, $3, $4, \'user\', 10000)',
+              [user_id, req.body.name, req.body.pass, req.body.email],
               (error, result) => {
                 if (result.rowCount !== 0) {
                   res.setHeader('Content-Type', 'application/json');
@@ -265,15 +265,15 @@ router.post('/api/login', async (req, res, next) => {
             const myname = result.rows[0].name;
             const myemail = result.rows[0].email;
             const myrole = result.rows[0].role;
-            const mycash = result.rows[0].cash;
-            const myuid = result.rows[0].uid;
+            const mycash = result.rows[0].saldo;
+            const myuid = result.rows[0].user_id;
             const token = jwt.sign(
                 {
                   name: myname,
                   email: myemail,
                   role: myrole,
                   saldo: mycash,
-                  uid: myuid,
+                  user_id: myuid,
                 },
                 config.secret,
                 {expiresIn: 86400},
@@ -346,14 +346,14 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 
     const {user} = req.params;
     client.query(
-        'UPDATE mk_pengguna SET cash = cash + $1 WHERE uid = $2',
-        [req.body.jumlah, req.uid],
+        'UPDATE mk_pengguna SET saldo = saldo + $1 WHERE user_id = $2',
+        [req.body.jumlah, req.user_id],
         (error, result) => {
           if (result.rowCount > 0) {
             const todayDate = moment(new Date()).format('YYYY-MM-DD');
             const todayTime = moment(new Date()).format('HH:mm:ss');
             client.query(
-                'INSERT INTO mk_histori_topup(uid, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
+                'INSERT INTO mk_histori_topup(user_id, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
                 [user, req.name, req.body.jumlah, todayTime, todayDate],
             );
             res.setHeader('Content-Type', 'application/json');
@@ -407,7 +407,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 // topup history
 router.get('/api/history', verifyToken, async (req, res, next) => {
   try {
-    client.query('SELECT name, jumlah, tanggal FROM mk_histori_topup WHERE uid = $1', [req.uid], (error, result) => {
+    client.query('SELECT name, jumlah, tanggal FROM mk_histori_topup WHERE user_id = $1', [req.user_id], (error, result) => {
       if (result.rows[0] !== undefined) {
         res.setHeader('Content-Type', 'application/json');
         res.status(200);
@@ -459,9 +459,9 @@ router.get('/api/history', verifyToken, async (req, res, next) => {
 router.put('/api/pay', verifyToken, async (req, res, next) => {
   try {
     const {jumlah} = req.body;
-    client.query('SELECT jumlah FROM mk_pengguna WHERE uid = $1', [req.uid], (error, result) => {
+    client.query('SELECT jumlah FROM mk_pengguna WHERE user_id = $1', [req.user_id], (error, result) => {
       if (result.rows[0] !== undefined) {
-        if (result.rows[0]['cash'] < jumlah) {
+        if (result.rows[0]['saldo'] < jumlah) {
           res.setHeader('Content-Type', 'application/json');
           res.status(400);
           return res
@@ -494,13 +494,13 @@ router.put('/api/pay', verifyToken, async (req, res, next) => {
     });
     client.end;
 
-    client.query('UPDATE mk_pengguna SET cash = cash - $1 WHERE uid = $2', [jumlah, req.uid], (error, result) => {
+    client.query('UPDATE mk_pengguna SET saldo = saldo - $1 WHERE user_id = $2', [jumlah, req.user_id], (error, result) => {
       if (result.rowCount > 0) {
         const todayDate = moment(new Date()).format('YYYY-MM-DD');
         const todayTime = moment(new Date()).format('HH:mm:ss');
         client.query(
-            'INSERT INTO mk_histori_bayar(uid, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
-            [req.uid, req.name, req.body.jumlah, todayTime, todayDate],
+            'INSERT INTO mk_histori_bayar(user_id, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
+            [req.user_id, req.name, req.body.jumlah, todayTime, todayDate],
         );
         res.setHeader('Content-Type', 'application/json');
         res.status(200);
