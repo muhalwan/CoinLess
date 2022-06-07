@@ -28,8 +28,8 @@ function verifyToken(req, res, next) {
     req.name = decoded.name;
     req.email = decoded.email;
     req.role = decoded.role;
-    req.cash = decoded.cash;
-    req.uid = decoded.uid;
+    req.saldo = decoded.saldo;
+    req.user_id = decoded.user_id;
     next();
   });
 }
