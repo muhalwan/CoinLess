@@ -1,5 +1,4 @@
 const verifyToken = require('../auth/verify');
-const verifyKey = require('../auth/newver');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const {nanoid} = require('nanoid');
@@ -9,6 +8,7 @@ const jsonParser = bodyParser.json();
 const moment = require('moment');
 const client = require('../db/conn.js');
 const config = require('../config');
+module.exports = router;
 
 
 router.use(jsonParser);
@@ -548,31 +548,3 @@ router.put('/api/pay', verifyToken, async (req, res, next) => {
         );
   }
 });
-
-router.get('/tes', (req, res, next) => {
-  axios
-      .post('https://met4kantin.herokuapp.com/api/login', {
-        email: 'ab@mail.com',
-        pass: 'abyan',
-      })
-      .then((ress) => {
-        res.setHeader('Content-Type', 'application/json');
-        return res
-            .send(
-                JSON.stringify(
-                    {
-                      // status: 200,
-                      tes: 'berhasil axios',
-                    },
-                    null,
-                    3,
-                ),
-            )
-            .status(200);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-});
-
-module.exports = router;
