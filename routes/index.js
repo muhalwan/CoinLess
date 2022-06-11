@@ -409,25 +409,22 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 });
 
 // topup history
-router.get('/api/history', verifyToken, async (req, res, next) => {
+router.get('/api/topuphistory', verifyToken, async (req, res, next) => {
   try {
     client.query('SELECT name, jumlah, tanggal FROM mk_histori_topup WHERE id_user = $1', [req.id_user], (error, result) => {
         if (result.rows[0] !== undefined) {
-          const myname = result.rows[0].name;
-          const myjumlah = result.rows[0].jumlah;
-          const mydate = result.rows[0].tanggal;
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
           return res
-              .send(
-                  JSON.stringify(
-                      {
-                        name: myname,
-                        jumlah: myjumlah,
-                        tanggal: mydate,   
-                      },
-                      null,
-                      3,
+            .send(
+                JSON.stringify(
+                    {
+                      status: 200,
+                      message: 'Histori topup',
+                      data: result.rows,
+                    },
+                    null,
+                    3,
                 ),
             );
       } else {
