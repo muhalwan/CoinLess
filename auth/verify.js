@@ -29,7 +29,7 @@ function verifyToken(req, res, next) {
     req.email = decoded.email;
     req.role = decoded.role;
     req.saldo = decoded.saldo;
-    req.user_id = decoded.user_id;
+    req.id_user = decoded.id_user;
     next();
   });
 }
