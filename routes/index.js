@@ -411,7 +411,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 // topup history
 router.get('/api/topuphistory', verifyToken, async (req, res, next) => {
   try {
-    client.query('SELECT name, jumlah, tanggal FROM mk_histori_topup WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT user_id, name, jumlah, tanggal FROM mk_histori_topup WHERE id_user = $1', [req.id_user], (error, result) => {
         if (result.rows[0] !== undefined) {
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
@@ -420,7 +420,6 @@ router.get('/api/topuphistory', verifyToken, async (req, res, next) => {
                 JSON.stringify(
                     {
                       status: 200,
-                      message: 'Histori topup',
                       data: result.rows,
                     },
                     null,
