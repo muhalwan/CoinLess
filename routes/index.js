@@ -125,14 +125,14 @@ router.post('/api/profile', async (req, res, next) => {
               JSON.stringify(
                   {
                     status: 400,
-                    message: 'Nama tidak boleh kurang dari 3 huruf',
+                    message: 'Nama tidak boleh kurang dari 3 karakter',
                   },
                   null,
                   3,
               ),
           );
     }
-    if (!req.body.pass || req.body.pass.length < 3) {
+    if (!req.body.pass || req.body.pass.length < 8) {
       res.setHeader('Content-Type', 'application/json');
       res.status(400);
       return res
@@ -140,7 +140,7 @@ router.post('/api/profile', async (req, res, next) => {
               JSON.stringify(
                   {
                     status: 400,
-                    message: 'Password tidak boleh kurang dari 3 huruf',
+                    message: 'Password tidak boleh kurang dari 8 karakter',
                   },
                   null,
                   3,
@@ -155,7 +155,7 @@ router.post('/api/profile', async (req, res, next) => {
               JSON.stringify(
                   {
                     status: 400,
-                    message: 'Email tidak sesuai',
+                    message: 'Email tidak sesuai format',
                   },
                   null,
                   3,
@@ -164,7 +164,7 @@ router.post('/api/profile', async (req, res, next) => {
     }
 
     client.query(
-        'SELECT EXISTS (SELECT name FROM users WHERE name = $1)',
+        'SELECT EXISTS (SELECT email FROM users WHERE email = $1)',
         [req.body.name],
         (error, result) => {
           if (result.rows[0].exists === true) {
@@ -175,7 +175,7 @@ router.post('/api/profile', async (req, res, next) => {
                     JSON.stringify(
                         {
                           status: 400,
-                          message: 'Name telah digunakan',
+                          message: 'Email telah digunakan',
                         },
                         null,
                         3,
@@ -185,7 +185,7 @@ router.post('/api/profile', async (req, res, next) => {
           const id_user = nanoid(16);
           const nomor_wallet = nanoid(16);
           client.query(
-              'INSERT INTO users(id_user, name, pass, email, role, jumlah, nomor_wallet) VALUES ($1, $2, $3, $4, \'user\', 10000, $5)',
+              'INSERT INTO users(id_user, name, pass, email, role, jumlah, nomor_wallet) VALUES ($1, $2, $3, $4, \'user\', 0, $5)',
               [id_user, req.body.name, req.body.pass, req.body.email, nomor_wallet],
               (error, result) => {
                 if (result.rowCount !== 0) {
@@ -235,22 +235,7 @@ router.post('/api/login', async (req, res, next) => {
               JSON.stringify(
                   {
                     status: 400,
-                    message: 'Password tidak boleh kurang dari 3 huruf',
-                  },
-                  null,
-                  3,
-              ),
-          );
-    }
-    if (!req.body.email || !req.body.email.includes('@')) {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400);
-      return res
-          .send(
-              JSON.stringify(
-                  {
-                    status: 400,
-                    message: 'Email tidak sesuai',
+                    message: 'Username atau password tidak sesuai',
                   },
                   null,
                   3,
@@ -263,7 +248,6 @@ router.post('/api/login', async (req, res, next) => {
         [req.body.email, req.body.pass],
         (error, result) => {
           if (result.rows[0] !== undefined) {
-          // console.log(result.rows[0])
             const myname = result.rows[0].name;
             const myemail = result.rows[0].email;
             const myrole = result.rows[0].role;
@@ -303,7 +287,7 @@ router.post('/api/login', async (req, res, next) => {
                   JSON.stringify(
                       {
                         status: 400,
-                        message: 'Invalid User or Password',
+                        message: 'Username atau password salah',
                       },
                       null,
                       3,
@@ -312,7 +296,6 @@ router.post('/api/login', async (req, res, next) => {
         },
     );
   } catch (error) {
-    // console.log(error);
     res.setHeader('Content-Type', 'application/json');
     res.status(500);
     return res
@@ -357,7 +340,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
             const todayDate = moment(new Date()).format('YYYY-MM-DD');
             const todayTime = moment(new Date()).format('HH:mm:ss');
             client.query(
-                'INSERT INTO mk_histori_topup(id_user, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
+                'INSERT INTO history(id_user, name, jumlah, waktu, tanggal, keterangan) VALUES($1, $2, $3, $4, $5, \'Top up\')',
                 [user, req.name, req.body.jumlah, todayTime, todayDate],
             );
             res.setHeader('Content-Type', 'application/json');
@@ -408,10 +391,10 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
   }
 });
 
-// topup history
-router.get('/api/topuphistory', verifyToken, async (req, res, next) => {
+// History Top up
+router.get('/api/history', verifyToken, async (req, res, next) => {
   try {
-    client.query('SELECT id_user, name, jumlah, tanggal FROM mk_histori_topup WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT id_user, name, jumlah, tanggal, keterangan FROM history WHERE id_user = $1', [req.id_user], (error, result) => {
         if (result.rows[0] !== undefined) {
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
@@ -460,10 +443,11 @@ router.get('/api/topuphistory', verifyToken, async (req, res, next) => {
   }
 });
 
+//pembelian
 router.put('/api/pembelian', verifyToken, async (req, res, next) => {
   try {
     const {jumlah} = req.body;
-    client.query('SELECT jumlah FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT jumlah FROM users WHERE nomor_wallet = $1', [req.nomor_wallet], (error, result) => {
       if (result.rows[0] !== undefined) {
         if (result.rows[0]['jumlah'] < jumlah) {
           res.setHeader('Content-Type', 'application/json');
