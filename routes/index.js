@@ -183,6 +183,7 @@ router.post('/api/profile', async (req, res, next) => {
                 );
           }
           const id_user = nanoid(16);
+          const nomor_wallet = nanoid(16);
           client.query(
               'INSERT INTO users(id_user, name, pass, email, role, jumlah, nomor_wallet) VALUES ($1, $2, $3, $4, \'user\', 10000, $5)',
               [id_user, req.body.name, req.body.pass, req.body.email, nomor_wallet],
