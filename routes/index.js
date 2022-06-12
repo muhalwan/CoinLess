@@ -340,7 +340,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
             const todayDate = moment(new Date()).format('YYYY-MM-DD');
             const todayTime = moment(new Date()).format('HH:mm:ss');
             client.query(
-                'INSERT INTO history(id_user, name, jumlah, waktu, tanggal, keterangan) VALUES($1, $2, $3, $4, $5, \'Top up\')',
+                'INSERT INTO history_topup(id_user, name, jumlah, waktu, tanggal, keterangan) VALUES($1, $2, $3, $4, $5, \'Top up\')',
                 [user, req.name, req.body.jumlah, todayTime, todayDate],
             );
             res.setHeader('Content-Type', 'application/json');
@@ -392,9 +392,9 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 });
 
 // History Top up
-router.get('/api/history', verifyToken, async (req, res, next) => {
+router.get('/api/historytopup', verifyToken, async (req, res, next) => {
   try {
-    client.query('SELECT id_user, name, jumlah, tanggal, keterangan FROM history WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT id_user, name, jumlah, tanggal, keterangan FROM history_topup WHERE id_user = $1', [req.id_user], (error, result) => {
         if (result.rows[0] !== undefined) {
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
@@ -487,8 +487,8 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
         const todayDate = moment(new Date()).format('YYYY-MM-DD');
         const todayTime = moment(new Date()).format('HH:mm:ss');
         client.query(
-            'INSERT INTO mk_histori_bayar(id_user, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
-            [req.id_user, req.name, req.body.jumlah, req.body.nomor_wallet, todayTime, todayDate],
+            'INSERT INTO history_barang(id_user, nama_barang, jumlah, nomor_wallet, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
+            [req.id_user, req.body.nama_barang, req.body.jumlah, req.body.nomor_wallet, todayTime, todayDate],
         );
         res.setHeader('Content-Type', 'application/json');
         res.status(200);
