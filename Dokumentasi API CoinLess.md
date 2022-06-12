@@ -42,11 +42,12 @@ Hasil
 
 ```json
 {
-  "user_id": "j3TxKjlwuBNU2TMw",
-  "name": "usertester",
-  "pass": "usertester",
-  "email": "tester@coinless.com",
-  "jumlah": "10000.00"
+    "id_user": "iFGiTRKzfWnQ5rHw",
+    "name": "usertester",
+    "pass": "usertester",
+    "email": "tester@coinless.com",
+    "jumlah": "0.00",
+    "nomor_wallet": "p9gyw3zMG15nZV89"
 }
 ```
 
@@ -118,3 +119,29 @@ Hasil
 }
 ```
 
+
+### History
+
+Contoh
+
+```
+GET https://coinless.herokuapp.com/api/profile/:id
+Authorization: Bearer Token
+```
+
+Hasil
+
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "id_user": "iFGiTRKzfWnQ5rHw",
+            "name": "usertester",
+            "jumlah": "1000000.00",
+            "tanggal": "2022-06-12T00:00:00.000Z",
+            "keterangan": "Top up"
+        }
+    ]
+}
+```
