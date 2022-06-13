@@ -410,7 +410,7 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
             // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
             client.query(
                 "INSERT INTO history_barang(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'CoinLess')",
-                [req.uid, req.name, jumlah, todayTime, todayDate],
+                [req.id_user, req.name, jumlah, todayTime, todayDate],
             );
             res.setHeader('Content-Type', 'application/json');
             res.status(200);
@@ -523,7 +523,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                         // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                         client.query(
                             "INSERT INTO mk_histori_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'otakupay')",
-                            [req.uid, req.name, harga, todayTime, todayDate],
+                            [req.id_user, req.name, harga, todayTime, todayDate],
                         );
                         res.status(200);
                         return res.json({
@@ -594,7 +594,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                                     // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                                     client.query(
                                         "INSERT INTO mk_histori_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'ecia')",
-                                        [req.uid, req.name, harga, todayTime, todayDate],
+                                        [req.id_user, req.name, harga, todayTime, todayDate],
                                     );
                                     res.status(200);
                                     return res.json({
