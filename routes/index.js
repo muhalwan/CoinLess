@@ -522,7 +522,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                         const todayTime = moment(new Date()).format('HH:mm:ss');
                         // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                         client.query(
-                            "INSERT INTO mk_histori_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'otakupay')",
+                            "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'otakupay')",
                             [req.id_user, req.name, harga, todayTime, todayDate],
                         );
                         res.status(200);
@@ -593,7 +593,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                                     const todayTime = moment(new Date()).format('HH:mm:ss');
                                     // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                                     client.query(
-                                        "INSERT INTO mk_histori_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'ecia')",
+                                        "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'ecia')",
                                         [req.id_user, req.name, harga, todayTime, todayDate],
                                     );
                                     res.status(200);
