@@ -1,16 +1,19 @@
 const verifyToken = require('../auth/verify');
+const verifyKey = require('../auth/newVerify');
+
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const {nanoid} = require('nanoid');
+// const pool = require('../db');
+// semua var pool ubah je client
+// const db = require('../db');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
+const axios = require('axios');
 const moment = require('moment');
-const client = require('../db/conn.js');
+const client = require('../db/connection.js');
 const config = require('../config');
-const cors = require('cors');
-
-module.exports = router;
 
 router.use(jsonParser);
 
@@ -34,12 +37,13 @@ router.get('/kantin', (req, res, next) => {
   res.sendFile('/app/html/metakantin.html');
 });
 
-// show all users
+// nampilin semua pengguna
+// all json
 router.get('/api/profile', verifyToken, (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.role === 'admin') {
-      client.query('SELECT * FROM users', (error, result) => {
+      client.query('SELECT * FROM mk_pengguna', (error, result) => {
         if (result.rowCount > 0) {
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
@@ -53,54 +57,44 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
         res.status(400);
         return res.json({
           status: 400,
-          message: 'User Kosong',
+          message: 'Belum ada yang mendaftar',
           data: [],
         });
-      });  
+      });
     } else {
       client.query(
-          'SELECT * FROM users WHERE id_user = $1',
-          [req.id_user],
+          'SELECT * FROM mk_pengguna WHERE uid = $1',
+          [req.uid],
           (error, result) => {
-            //console.log(result);
-            if (result.rows[0] !== undefined) {
+            // console.log(result);
+            if (result.rowCount > 0) {
               const myname = result.rows[0].name;
               const myemail = result.rows[0].email;
               const mypass = result.rows[0].pass;
-              const mycash = result.rows[0].jumlah;
-              const myuid = result.rows[0].id_user;
-              const mywallet = result.rows[0].nomor_wallet;
+              const myrole = result.rows[0].role;
+              const mycash = result.rows[0].cash;
+              const myuid = result.rows[0].uid;
               res.setHeader('Content-Type', 'application/json');
               res.status(200);
-              return res
-                  .send(
-                      JSON.stringify(
-                          {
-                            id_user: myuid,
-                            name: myname,
-                            pass: mypass,
-                            email: myemail,
-                            jumlah: mycash,
-                            nomor_wallet: mywallet,    
-                          },
-                          null,
-                          3,
-                      ),
-                  );
+              return res.json({
+                status: 200,
+                message: 'User data',
+                data: {
+                  name: myname,
+                  pass: mypass,
+                  email: myemail,
+                  role: myrole,
+                  cash: mycash,
+                  uid: myuid,
+                },
+              });
             }
             res.setHeader('Content-Type', 'application/json');
             res.status(400);
-            return res
-                .send(
-                    JSON.stringify(
-                        {
-                          status: 400,
-                          message: 'User tidak ditemukan',
-                        },
-                        null,
-                        3,
-                    ),
-                );
+            return res.json({
+              status: 400,
+              message: 'Tidak ada user',
+            });
           },
       );
     }
@@ -113,8 +107,9 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
       message: 'Server error',
     });
   }
-});
 
+  // res.json({test: "Selamat Datang!"});
+});
 // Daftar pengguna
 router.post('/api/profile', async (req, res, next) => {
   try {
@@ -126,63 +121,62 @@ router.post('/api/profile', async (req, res, next) => {
           .json(
               {
                 status: 400,
-                message: 'Nama tidak boleh kurang dari 3 karakter',
-                },
+                message: 'Nama harus lebih dari 3 huruf',
+              },
           );
     }
-    if (!req.body.pass || req.body.pass.length < 8) {
+    if (!req.body.pass || req.body.pass.length < 3) {
       res.setHeader('Content-Type', 'application/json');
       res.status(400);
       return res
-        .json(
-        {
-          status: 400,
-          message: 'Password tidak boleh kurang dari 8 karakter',
-        },
-      );
+          .json(
+              {
+                status: 400,
+                message: 'Password harus lebih dari 3 huruf',
+              },
+          );
     }
     if (!req.body.email || !req.body.email.includes('@')) {
       res.setHeader('Content-Type', 'application/json');
       res.status(400);
       return res
-        .json(
-          {
-            status: 400,
-            message: 'Email tidak sesuai format',
-          },
-      );
+          .json(
+              {
+                status: 400,
+                message: 'Email tidak valid',
+              },
+          );
     }
 
     client.query(
-        'SELECT EXISTS (SELECT email FROM users WHERE email = $1)',
+        'SELECT EXISTS (SELECT name FROM mk_pengguna WHERE name = $1)',
         [req.body.name],
         (error, result) => {
           if (result.rows[0].exists === true) {
             res.setHeader('Content-Type', 'application/json');
             res.status(400);
             return res
-              .json(
-                {
-                  status: 400,
-                  message: 'Email telah digunakan',
-                },
-              );
+                .json(
+                    {
+                      status: 400,
+                      message: 'Name telah terdaftar',
+                    },
+                );
           }
-          const id_user = nanoid(16);
-          const nomor_wallet = nanoid(16);
+          const uid = nanoid(16);
           client.query(
-              'INSERT INTO users(id_user, name, pass, email, role, jumlah, nomor_wallet) VALUES ($1, $2, $3, $4, \'user\', 0, $5)',
-              [id_user, req.body.name, req.body.pass, req.body.email, nomor_wallet],
+              'INSERT INTO MK_pengguna(uid, name, pass, email, role, cash) VALUES ($1, $2, $3, $4, \'user\', 10000)',
+              [uid, req.body.name, req.body.pass, req.body.email],
               (error, result) => {
                 if (result.rowCount !== 0) {
                   res.setHeader('Content-Type', 'application/json');
                   res.status(200);
                   return res
                       .json(
-                            {
-                              status: 200,
-                              message: 'Pendaftaran Berhasil',
-                            },
+                          {
+                            status: 200,
+                            message: 'Pendaftaran berhasil',
+                          },
                       );
                 }
               },
@@ -190,18 +184,18 @@ router.post('/api/profile', async (req, res, next) => {
         },
     );
   } catch (error) {
+    // console.log(error);
     res.setHeader('Content-Type', 'application/json');
     res.status(500);
     return res
         .json(
-              {
-                status: 500,
-                message: 'Server error',
-              },
+            {
+              status: 500,
+              message: 'Server error',
+            },
         );
   }
 });
-
 // login
 router.post('/api/login', async (req, res, next) => {
   try {
@@ -213,30 +207,42 @@ router.post('/api/login', async (req, res, next) => {
           .json(
               {
                 status: 400,
-                message: 'Username atau password tidak sesuai',
+                message: 'Password harus lebih dari 3 huruf',
+              },
+          );
+    }
+    if (!req.body.email || !req.body.email.includes('@')) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400);
+      return res
+          .json(
+              {
+                status: 400,
+                message: 'Email tidak valid',
               },
           );
     }
 
     client.query(
-        'SELECT * FROM users WHERE email = $1 AND pass = $2',
+        'SELECT * FROM mk_pengguna WHERE email = $1 AND pass = $2',
         [req.body.email, req.body.pass],
         (error, result) => {
           if (result.rowCount > 0) {
+          // console.log(result.rows[0])
+            const myid = result.rows[0].id;
             const myname = result.rows[0].name;
             const myemail = result.rows[0].email;
             const myrole = result.rows[0].role;
-            const mycash = result.rows[0].jumlah;
-            const myuid = result.rows[0].id_user;
-            const mywallet = result.rows[0].nomor_wallet;
+            const mycash = result.rows[0].cash;
+            const myuid = result.rows[0].uid;
             const token = jwt.sign(
                 {
-                  id_user: myuid,
+                  id: myid,
                   name: myname,
                   email: myemail,
                   role: myrole,
-                  jumlah: mycash,
-                  nomor_wallet: mywallet,
+                  cash: mycash,
+                  uid: myuid,
                 },
                 config.secret,
                 {expiresIn: 86400},
@@ -255,10 +261,10 @@ router.post('/api/login', async (req, res, next) => {
           res.status(400);
           return res
               .json(
-                      {
-                        status: 400,
-                        message: 'Username atau password salah',
-                      },
+                  {
+                    status: 400,
+                    message: 'User tidak ada, password salah atau belum mendaftar',
+                  },
               );
         },
     );
@@ -285,33 +291,33 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
       res.status(400);
       return res
           .json(
-                  {
-                    status: 400,
-                    message: 'Topup tidak boleh kurang dari 1000',
-                  },
+              {
+                status: 400,
+                message: 'Topup harus di atas 1000',
+              },
           );
     }
 
     const {user} = req.params;
     client.query(
-        'UPDATE users SET jumlah = jumlah + $1 WHERE id_user = $2',
-        [req.body.jumlah, req.id_user],
+        'UPDATE mk_pengguna SET cash = cash + $1 WHERE uid = $2',
+        [req.body.jumlah, req.uid],
         (error, result) => {
           if (result.rowCount > 0) {
             const todayDate = moment(new Date()).format('YYYY-MM-DD');
             const todayTime = moment(new Date()).format('HH:mm:ss');
             client.query(
-                'INSERT INTO history_topup(id_user, name, jumlah, waktu, tanggal, keterangan) VALUES($1, $2, $3, $4, $5, \'Top up\')',
+                'INSERT INTO mk_histori_topup(uid, name, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)',
                 [user, req.name, req.body.jumlah, todayTime, todayDate],
             );
             res.setHeader('Content-Type', 'application/json');
             res.status(200);
             return res
                 .json(
-                        {
-                          status: 200,
-                          message: 'Top up berhasil',
-                        },
+                    {
+                      status: 200,
+                      message: 'Topup berhasil',
+                    },
                 );
           } else {
             res.setHeader('Content-Type', 'application/json');
@@ -339,15 +345,13 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
         );
   }
 });
-
-// History Top up
-router.get('/api/historytopup', verifyToken, async (req, res, next) => {
+// topup history
+router.get('/api/history/topup', verifyToken, async (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    client.query('SELECT id_user, name, jumlah, tanggal, keterangan FROM history_topup WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT uid, name, jumlah, waktu, tanggal FROM mk_histori_topup WHERE uid = $1', [req.uid], (error, result) => {
       if (result.rowCount > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.status(200);
+        res.status(200);
         return res
             .json(
                 {
@@ -357,14 +361,14 @@ router.get('/api/historytopup', verifyToken, async (req, res, next) => {
                 },
             );
       } else {
-        res.setHeader('Content-Type', 'application/json');
         res.status(400);
         return res
             .json(
-                    {
-                      status: 400,
-                      message: 'Tidak ada history topup',
-                    },
+                {
+                  status: 400,
+                  message: 'User ini belum pernah melakukan topup',
+                  data: [],
+                },
             );
       }
     });
@@ -373,99 +377,219 @@ router.get('/api/historytopup', verifyToken, async (req, res, next) => {
     res.status(500);
     return res
         .json(
-                {
-                  status: 500,
-                  message: 'Server error',
-                },
+            {
+              status: 500,
+              message: 'Server error',
+            },
         );
   }
 });
 
-//pembelian
-router.put('/api/pembelian', verifyToken, async (req, res, next) => {
+// menampilkan menu toko
+router.get('/api/foods', async (req, res, next) => {
+  try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    client.query('SELECT nama, kategori, harga, fuid FROM mk_makanan', (error, result) => {
+      if (result.rowCount > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200);
+        return res.json({
+          status: 200,
+          message: 'List makanan',
+          data: result.rows,
+        });
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400);
+        return res.json({
+          status: 400,
+          message: 'Tidak ada kantin',
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
+});
+router.get('/api/foods/:category', async (req, res, next) => {
+  try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {category} = req.params;
+    client.query('SELECT * FROM mk_makanan WHERE kategori = $1;', [category], (error, result) => {
+      if (result.rowCount > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200);
+        return res.json({
+          status: 200,
+          message: 'List makanan berdasarkan kategori',
+          data: result.rows,
+        });
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400);
+        return res.json({
+          status: 400,
+          message: 'Tidak ada makanan dengan kategori itu',
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
+});
+router.get('/api/foods/buy/:uid', (req, res, next) => {
+  try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {uid} = req.params;
+    client.query('SELECT nama, kategori, harga, fuid FROM mk_makanan WHERE fuid = $1', [uid], (errror, result) => {
+      if (result.rowCount > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200);
+        return res
+            .json(
+                {
+                  status: 200,
+                  message: 'Deskripsi makanan',
+                  data: result.rows[0],
+                },
+            );
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400);
+        return res
+            .json(
+                {
+                  status: 400,
+                  message: 'Makanan tidak ditemukan',
+                },
+            );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
+});
+// membeli makanan
+// router.post('/api/pembelian')
+
+// bayar menggunakan metamoney
+router.put('/api/pay', verifyToken, (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     const jumlah = req.body.jumlah;
-    console.log(jumlah);
-    client.query('SELECT jumlah FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
-      if (result.rowCount > 0) {
-        if (result.rows[0]['jumlah'] < jumlah) {
-          res.status(400);
-          return res.json(
-                      {
-                        status: 400,
-                        message: 'Saldo tidak mencukupi',
-                      });
-      } else {
-        client.query('UPDATE users SET jumlah = jumlah - $1 WHERE id_user = $2', [jumlah, req.id_user], (error, result) => {
-          if (result.rowCount > 0) {
-            const todayDate = moment(new Date()).format('YYYY-MM-DD');
-            const todayTime = moment(new Date()).format('HH:mm:ss');
-            // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
-            client.query(
-                "INSERT INTO history_barang(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'CoinLess')",
-                [req.uid, req.name, jumlah, todayTime, todayDate],
-            );
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200);
-            return res
-                .json(
-                    {
-                      status: 200,
-                      message: 'Pembayaran berhasil',
-                    },
-                );
-          } else {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(400);
-            return res
-                .json(
-                    {
-                      status: 400,
-                      message: 'Pembayaran gagal',
-                    },
-                );
-          }
-        });
-      }
-    } else {
-      res.setHeader('Content-Type', 'application/json');
+    if (jumlah <= 0) {
       res.status(400);
       return res.json({
         status: 400,
-        message: 'User tidak ada',
+        message: 'Tidak boleh bernilai 0 atau negatif',
       });
-    }
-  });
-  client.end;
-} catch (error) {
-  console.log(error);
-  res.setHeader('Content-Type', 'application/json');
-  res.status(500);
-  return res
-      .json(
-          {
-            status: 500,
-            message: 'Server error',
-          },
-      );
-}
+    };
+    console.log(jumlah);
+    client.query('SELECT cash FROM mk_pengguna WHERE uid = $1', [req.uid], (error, result) => {
+      if (result.rowCount > 0) {
+        if (result.rows[0]['cash'] < jumlah) {
+          res.status(400);
+          return res.json({
+            status: 400,
+            message: 'Uang anda tidak cukup',
+          });
+        } else {
+          client.query('UPDATE mk_pengguna SET cash = cash - $1 WHERE uid = $2', [jumlah, req.uid], (error, result) => {
+            if (result.rowCount > 0) {
+              const todayDate = moment(new Date()).format('YYYY-MM-DD');
+              const todayTime = moment(new Date()).format('HH:mm:ss');
+              // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
+              client.query(
+                  "INSERT INTO mk_histori_bayar(uid, name, jumlah, waktu, tanggal, metode) VALUES($1, $2, $3, $4, $5, 'metamoney')",
+                  [req.uid, req.name, jumlah, todayTime, todayDate],
+              );
+              res.setHeader('Content-Type', 'application/json');
+              res.status(200);
+              return res
+                  .json(
+                      {
+                        status: 200,
+                        message: 'Pembayaran berhasil',
+                      },
+                  );
+            } else {
+              res.setHeader('Content-Type', 'application/json');
+              res.status(400);
+              return res
+                  .json(
+                      {
+                        status: 400,
+                        message: 'Gagal bayar',
+                      },
+                  );
+            }
+          });
+        }
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400);
+        return res.json({
+          status: 400,
+          message: 'User tidak ditemukan',
+        });
+      }
+    });
+    client.end;
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
 });
-
+// api pilih emoney langsung bayar
 router.post('/api/transaksi', verifyToken, async (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    const {id_barang, ewallet, harga} = req.body;
-    client.query('SELECT * FROM mk_barang WHERE id_barang = $1', [id_barang], (error, result) => {
+    const {fuid, wallet, harga} = req.body;
+    client.query('SELECT * FROM mk_makanan WHERE fuid = $1', [fuid], (error, result) => {
       // console.log(result.rows);
       if (result.rowCount <= 0) {
         res.status(400);
         return res.json({
           status: 400,
-          message: 'Barang tidak ditemukan',
+          message: 'Makanan tidak ditemukan',
         });
       } else {
-        if (wallet === 'coinless') {
+        if (wallet === 'metamoney') {
           const token = req.headers.authorization;
           const config = {
             headers: {Authorization: token},
@@ -474,14 +598,14 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
             jumlah: harga,
           };
           axios
-              .put('https://coinless.herokuapp.com/api/pembelian', payload, config)
+              .put('https://met4kantin.herokuapp.com/api/pay', payload, config)
               .then((ress) => {
                 // return res.send(ress.data);
                 // kalau pembayaran berhasil
                 if (ress.data.status === 200) {
                   return res.json({
                     status: 200,
-                    message: 'Pembayaran dengan coinless berhasil',
+                    message: 'Pembayaran metamoney berhasil',
                   });
                   // lakukan query disini
                 }
@@ -494,8 +618,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
         } else if (wallet === 'otakupay') {
           axios
               .post('https://opay-v2.herokuapp.com/auth/login', {
-                username: 'coinless',
-                password: 'coinless123',
+                username: 'abad',
+                password: 'abadabad',
               })
               .then((ress) => {
                 otakupayToken = ress.data.token;
@@ -516,13 +640,13 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                         const todayTime = moment(new Date()).format('HH:mm:ss');
                         // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                         client.query(
-                            "INSERT INTO mk_histori_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'otakupay')",
+                            "INSERT INTO mk_histori_bayar(uid, name, jumlah, waktu, tanggal, metode) VALUES($1, $2, $3, $4, $5, 'otakupay')",
                             [req.uid, req.name, harga, todayTime, todayDate],
                         );
                         res.status(200);
                         return res.json({
                           status: 200,
-                          message: 'Pembayaran dengan otakupay berhasil',
+                          message: 'Pembayaran otakupay berhasil',
                         });
                         // lakukan query disini
                       }
@@ -544,8 +668,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
           // dapatin jwt
           axios
               .post('https://api-ecia.herokuapp.com/api/login', {
-                email: 'coinless@test.com',
-                pass: 'coinless123',
+                email: 'abad@mail.com',
+                pass: 'abadabad',
               })
               .then((ress) => {
                 // dapatin info
@@ -587,13 +711,13 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                                     const todayTime = moment(new Date()).format('HH:mm:ss');
                                     // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                                     client.query(
-                                        "INSERT INTO mk_histori_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'ecia')",
+                                        "INSERT INTO mk_histori_bayar(uid, name, jumlah, waktu, tanggal, metode) VALUES($1, $2, $3, $4, $5, 'ecia')",
                                         [req.uid, req.name, harga, todayTime, todayDate],
                                     );
                                     res.status(200);
                                     return res.json({
                                       status: 200,
-                                      message: 'Pembayaran dengan ecia berhasil',
+                                      message: 'Pembayaran ecia berhasil',
                                     });
                                   }
                                 })
@@ -648,21 +772,22 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
   }
 });
 // tampilkan histori bayar emoney
-router.get('/api/history/pembelian/lain', verifyToken, async (req, res, next) => {
+router.get('/api/history/pays', verifyToken, async (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   try {
-    client.query('SELECT * FROM histori_pembelian WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT * FROM mk_histori_bayar WHERE uid = $1', [req.uid], (error, result) => {
       if (result.rowCount > 0) {
         res.status(200);
         res.json({
           status: 200,
+          message: 'List histori bayar menggunakan emoney',
           data: result.rows,
         });
       } else {
         res.status(200);
         return res.json({
           status: 200,
-          message: 'Tidak ada history pembelian',
+          message: 'Belum melakukan pembayaran sama sekali',
         });
       }
     });
@@ -681,31 +806,35 @@ router.post('/api/transfer', verifyToken, async (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   try {
     const {tujuan, jumlah} = req.body;
-    client.query('SELECT * FROM users WHERE id_user4 = $1', [tujuan], (error, result) => {
+    let pesan = req.body.pesan;
+    client.query('SELECT * FROM mk_pengguna WHERE uid = $1', [tujuan], (error, result) => {
       // cek apakah pengguna ada
       if (result.rowCount <= 0) {
         res.status(400);
         return res.json({
           status: 400,
-          message: 'wallet tujuan tidak ada',
+          message: 'Alamat yang kamu kirim tidak ditemukan',
         });
       } else {
         // cek apakah uang cukup
-        if (req.jumlah < jumlah) {
+        if (req.cash < jumlah) {
           res.status(400);
           return res.json({
             status: 400,
-            message: 'Saldo tidak cukup',
+            message: 'Uang Anda tidak cukup',
           });
         } else {
+          if (pesan === undefined) {
+            pesan = "Transfer ke kamu";
+          };
           // kurangi uang pengguna
-          client.query('UPDATE users SET jumlah = jumlah - $1 WHERE id_user = $2', [jumlah, req.id_user]);
+          client.query('UPDATE mk_pengguna SET cash = cash - $1 WHERE uid = $2', [jumlah, req.uid]);
           // tambah rekening tujuan
-          client.query('UPDATE users SET jumlah = jumlah + $1 WHERE id_user = $2', [jumlah, tujuan]);
+          client.query('UPDATE mk_pengguna SET cash = cash + $1 WHERE uid = $2', [jumlah, tujuan]);
           // masukkan proses ke histori transfer
           const todayDate = moment(new Date()).format('YYYY-MM-DD');
           const todayTime = moment(new Date()).format('HH:mm:ss');
-          client.query('INSERT INTO histori_transfer(asal, tujuan, jumlah, waktu, tanggal) VALUES($1, $2, $3, $4, $5)', [req.id_user, tujuan, jumlah, todayTime, todayDate], (error1, result1) => {
+          client.query('INSERT INTO mk_histori_transfer(asal, tujuan, jumlah, waktu, tanggal, pesan) VALUES($1, $2, $3, $4, $5, $6)', [req.uid, tujuan, jumlah, todayTime, todayDate, pesan], (error1, result1) => {
             if (result1.rowCount <= 0) {
               res.status(400);
               return res.json({
@@ -735,18 +864,19 @@ router.post('/api/transfer', verifyToken, async (req, res, next) => {
 // history transfer keluar
 router.get('/api/history/transfer/out', verifyToken, async (req, res, next) => {
   try {
-    client.query('SELECT * FROM histori_transfer WHERE asal = $1', [req.id_user], (error, result) => {
+    client.query('SELECT * FROM mk_histori_transfer WHERE asal = $1', [req.uid], (error, result) => {
       if (result.rowCount <= 0) {
         res.status(200);
         return res.json({
           status: 200,
-          message: 'tidak ada history transfer',
+          message: 'Belum pernah melakukan transfer',
           data: [],
         });
       } else {
         res.status(200);
         return res.json({
           status: 200,
+          message: 'List Transfer keluar',
           data: result.rows,
         });
       }
@@ -763,18 +893,19 @@ router.get('/api/history/transfer/out', verifyToken, async (req, res, next) => {
 // history transfer masuk
 router.get('/api/history/transfer/in', verifyToken, async (req, res, next) => {
   try {
-    client.query('SELECT * FROM histori_transfer WHERE tujuan = $1', [req.id_user], (error, result) => {
+    client.query('SELECT * FROM mk_histori_transfer WHERE tujuan = $1', [req.uid], (error, result) => {
       if (result.rowCount <= 0) {
         res.status(200);
         return res.json({
           status: 200,
-          message: 'Tidak ada history transfer',
+          message: 'Belum pernah ditransfer',
           data: [],
         });
       } else {
         res.status(200);
         return res.json({
           status: 200,
+          message: 'List Transfer masuk',
           data: result.rows,
         });
       }
@@ -830,3 +961,5 @@ router.post('/tess', (req, res, next) => {
         return res.send(error.response.data);
       });
 });
+
+module.exports = router;
