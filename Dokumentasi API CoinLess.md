@@ -29,6 +29,7 @@ Method | End-Point | Autorisasi | Deskripsi
 `PUT` | /api/pembelian | YES | Melakukan pembayaran barang
 `POST` | /api/pembelian | YES | Pembayaran dengan ewallet coinless
 `POST` | /api/transaksi | YES | Pembayaran dengan ewallet lain
+`GET` | /api/history/pembelian | YES | Melihat history pembelian
 `POST` | /api/transfer | YES | Transfer antar user
 `GET` | /api/item | NO | Melihat barang yang dijual
 
@@ -202,6 +203,35 @@ Hasil
 }
 ```
 
+### History Pembelian
+
+Contoh
+
+```
+GET https://coinless.herokuapp.com/api/history/pembelian
+Authorization: Bearer Token
+```
+
+Hasil
+
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "id": 1,
+            "id_user": "jEDk2o3M7FFlkPmq",
+            "name": "user1",
+            "jumlah": "1.00",
+            "waktu": "20:27:14",
+            "tanggal": "2022-06-13T00:00:00.000Z",
+            "emoney": "CoinLess",
+            "nama_barang": null
+        }
+    ]
+}
+```
+
 ### Transfer
 
 Contoh
@@ -232,7 +262,6 @@ Contoh
 ```
 GET https://coinless.herokuapp.com/api/item
 Authorization: Bearer Token
-
 ```
 
 Hasil
