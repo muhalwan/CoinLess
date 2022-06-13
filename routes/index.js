@@ -657,7 +657,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
 router.get('/api/history/pembelian/lain', verifyToken, async (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   try {
-    client.query('SELECT * FROM histori_pembelian WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT * FROM history_pembelian WHERE id_user = $1', [req.id_user], (error, result) => {
       if (result.rowCount > 0) {
         res.status(200);
         res.json({
@@ -687,7 +687,7 @@ router.post('/api/transfer', verifyToken, async (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   try {
     const {tujuan, jumlah} = req.body;
-    client.query('SELECT * FROM users WHERE id_user4 = $1', [tujuan], (error, result) => {
+    client.query('SELECT * FROM users WHERE id_user = $1', [tujuan], (error, result) => {
       // cek apakah pengguna ada
       if (result.rowCount <= 0) {
         res.status(400);
