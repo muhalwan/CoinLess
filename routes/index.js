@@ -795,44 +795,77 @@ router.get('/api/history/transfer/in', verifyToken, async (req, res, next) => {
   }
 });
 
-router.post('/tes', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  axios
-      .post('https://met4kantin.herokuapp.com/api/login', {
-        email: req.body.email,
-        pass: req.body.pass,
-      })
-      .then((ress) => {
-        if (ress.data.status == 200) {
-          res.setHeader('Content-Type', 'application/json');
-          res.status(200);
-          return res.json({
-            message: 'pengguna ditemukan',
-          });
-        };
-      })
-      .catch((error) => {
+router.get('/api/item', async (req, res, next) => {
+  try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    client.query('SELECT nama_barang, harga, id_barang FROM barang', (error, result) => {
+      if (result.rowCount > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200);
+        return res.json({
+          status: 200,
+          data: result.rows,
+        });
+      } else {
         res.setHeader('Content-Type', 'application/json');
         res.status(400);
-        return res.send(error.response.data);
-      });
+        return res.json({
+          status: 400,
+          message: 'Tidak ada barang',
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
 });
 
-router.post('/tess', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  axios
-      .get('https://met4kantin.herokuapp.com/api/pembelian', {
-        headers: {
-          'authorization': req.headers.authorization,
-        },
-      })
-      .then((ress) => {
-        res.cookie('harpay', 'cookieValue');
-        return res.send(ress.data);
-      })
-      .catch((error) => {
+router.get('/api/item/pembelian/:id', (req, res, next) => {
+  try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {id} = req.params;
+    client.query('SELECT nama_barang, harga, id_barang FROM barang WHERE id_barang = $1', [id_barang], (errror, result) => {
+      if (result.rowCount > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200);
+        return res
+            .json(
+                {
+                  status: 200,
+                  data: result.rows[0],
+                },
+            );
+      } else {
         res.setHeader('Content-Type', 'application/json');
         res.status(400);
-        return res.send(error.response.data);
-      });
+        return res
+            .json(
+                {
+                  status: 400,
+                  message: 'Barang tidak ditemukan',
+                },
+            );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
 });
