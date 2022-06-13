@@ -409,8 +409,8 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
             const todayTime = moment(new Date()).format('HH:mm:ss');
             // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
             client.query(
-                "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'CoinLess')",
-                [req.id_user, req.name, jumlah, todayTime, todayDate],
+                "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney, nama_barang) VALUES($1, $2, $3, $4, $5, 'CoinLess', $6)",
+                [req.id_user, req.name, jumlah, todayTime, todayDate, req.nama_barang],
             );
             res.setHeader('Content-Type', 'application/json');
             res.status(200);
@@ -522,8 +522,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                         const todayTime = moment(new Date()).format('HH:mm:ss');
                         // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                         client.query(
-                            "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'otakupay')",
-                            [req.id_user, req.name, harga, todayTime, todayDate],
+                            "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney, nama_barang) VALUES($1, $2, $3, $4, $5, 'otakupay', $6)",
+                            [req.id_user, req.name, harga, todayTime, todayDate, req.nama_barang],
                         );
                         res.status(200);
                         return res.json({
@@ -593,8 +593,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                                     const todayTime = moment(new Date()).format('HH:mm:ss');
                                     // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
                                     client.query(
-                                        "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'ecia')",
-                                        [req.id_user, req.name, harga, todayTime, todayDate],
+                                        "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney, nama_barang) VALUES($1, $2, $3, $4, $5, 'ecia', $6)",
+                                        [req.id_user, req.name, harga, todayTime, todayDate, req.nama_barang],
                                     );
                                     res.status(200);
                                     return res.json({
