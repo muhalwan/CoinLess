@@ -341,7 +341,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 });
 
 // History Top up
-router.get('/api/historytopup', verifyToken, async (req, res, next) => {
+router.get('/api/history/topup', verifyToken, async (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     client.query('SELECT id_user, name, jumlah, tanggal, keterangan FROM history_topup WHERE id_user = $1', [req.id_user], (error, result) => {
@@ -654,7 +654,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
   }
 });
 // tampilkan histori bayar emoney
-router.get('/api/history/pembelian/lain', verifyToken, async (req, res, next) => {
+router.get('/api/history/pembelian', verifyToken, async (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   try {
     client.query('SELECT * FROM history_pembelian WHERE id_user = $1', [req.id_user], (error, result) => {
