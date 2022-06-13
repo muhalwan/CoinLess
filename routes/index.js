@@ -274,7 +274,7 @@ router.post('/api/login', async (req, res, next) => {
                 .send(
                     JSON.stringify(
                         {
-
+                          status: 200,
                           jwt: token,
                         },
                         null,
