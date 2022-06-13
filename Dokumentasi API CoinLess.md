@@ -25,6 +25,12 @@ Method | End-Point | Autorisasi | Deskripsi
 `POST` | /api/login | NO | Login Akun
 `GET`  | /api/profile | YES | Lihat Profil
 `PUT` |  /api/profile/:id | YES | Top up ke user
+`GET` | /api/history/topup | YES | Melihat history topup
+`PUT` | /api/pembelian | YES | Melakukan pembayaran barang
+`POST` | /api/pembelian | YES | Pembayaran dengan ewallet coinless
+`POST` | /api/transaksi | YES | Pembayaran dengan ewallet lain
+`POST` | /api/transfer | YES | Transfer antar user
+`GET` | /api/item | NO | Melihat barang yang dijual
 
 ## Demonstrasi Penggunaan Endpoint
 
@@ -46,7 +52,7 @@ Hasil
     "name": "usertester",
     "pass": "usertester",
     "email": "tester@coinless.com",
-    "jumlah": "0.00",
+    "saldo": "0.00",
     "nomor_wallet": "p9gyw3zMG15nZV89"
 }
 ```
@@ -93,7 +99,8 @@ Hasil
 
 ```json
 {
-     "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXNlcnRlc3RlciIsImVtYWlsIjoidGVzdGVyQGNvaW5sZXNzLmNvbSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOiIxMDAwMC4wMCIsInVzZXJfaWQiOiJqM1R4S2psd3VCTlUyVE13IiwiaWF0IjoxNjU0Nzc3NjkyLCJleHAiOjE2NTQ4NjQwOTJ9.GApdPB5bl_EVJNtC8Y1Eo-7hyMWuvWPN5abb5-osMe0"
+  status: 200,
+  "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXNlcnRlc3RlciIsImVtYWlsIjoidGVzdGVyQGNvaW5sZXNzLmNvbSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOiIxMDAwMC4wMCIsInVzZXJfaWQiOiJqM1R4S2psd3VCTlUyVE13IiwiaWF0IjoxNjU0Nzc3NjkyLCJleHAiOjE2NTQ4NjQwOTJ9.GApdPB5bl_EVJNtC8Y1Eo-7hyMWuvWPN5abb5-osMe0"
 }
 ```
 
@@ -120,7 +127,7 @@ Hasil
 ```
 
 
-### History
+### History Topup
 
 Contoh
 
@@ -141,6 +148,108 @@ Hasil
             "jumlah": "1000000.00",
             "tanggal": "2022-06-12T00:00:00.000Z",
             "keterangan": "Top up"
+        }
+    ]
+}
+```
+
+### Pembelian
+
+Contoh
+
+```
+PUT https://coinless.herokuapp.com/api/pembelian
+Authorization: Bearer Token
+
+{
+    "jumlah": "420000",
+    "id_user": "jEDk2o3M7FFlkPmq",
+    "nama_barang": "BLACK MEN'S WATCH"
+}
+```
+
+Hasil
+
+```json
+{
+    "status": 200,
+    "message": "Pembayaran berhasil"
+}
+```
+
+### Pembelian Dengan Ewallet lain
+
+Contoh
+
+```
+PUT https://coinless.herokuapp.com/api/transaksi
+Authorization: Bearer Token
+
+{
+    "wallet": "otakupay",
+    "id_barang": "1",
+    "nama_barang": "BLACK MEN'S WATCH",
+    "harga": "420000"
+}
+```
+
+Hasil
+
+```json
+{
+    "status": 200,
+    "message": "Pembayaran dengan otakupay berhasil"
+}
+```
+
+### Transfer
+
+Contoh
+
+```
+POST https://coinless.herokuapp.com/api/transfer
+Authorization: Bearer Token
+
+{
+    "jumlah": "1",
+    "tujuan": "jEDk2o3M7FFlkPmq"
+}
+```
+
+Hasil
+
+```json
+{
+    "status": 200,
+    "message": "Berhasil melakukan transfer"
+}
+```
+
+### Barang
+
+Contoh
+
+```
+GET https://coinless.herokuapp.com/api/item
+Authorization: Bearer Token
+
+```
+
+Hasil
+
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "nama_barang": "BLACK MEN'S WATCH",
+            "harga": "69000.00",
+            "id_barang": 1
+        },
+        {
+            "nama_barang": "BLACK SNEAKZ",
+            "harga": "420000.00",
+            "id_barang": 2
         }
     ]
 }
