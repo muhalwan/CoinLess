@@ -216,19 +216,14 @@ Hasil
 
 ```json
 {
-    "status": 200,
-    "data": [
-        {
-            "id": 1,
-            "id_user": "jEDk2o3M7FFlkPmq",
-            "name": "user1",
-            "jumlah": "1.00",
-            "waktu": "20:27:14",
-            "tanggal": "2022-06-13T00:00:00.000Z",
-            "emoney": "CoinLess",
-            "nama_barang": null
-        }
-    ]
+    "id": 16,
+    "id_user": "jEDk2o3M7FFlkPmq",
+    "name": "user1",
+    "jumlah": "69000.00",
+    "waktu": "21:33:01",
+    "tanggal": "2022-06-13T00:00:00.000Z",
+    "emoney": "CoinLess",
+    "nama_barang": "BLACK MEN'S WATCH"
 }
 ```
 
@@ -241,7 +236,7 @@ POST https://coinless.herokuapp.com/api/transfer
 Authorization: Bearer Token
 
 {
-    "jumlah": "1",
+    "jumlah": "100000",
     "tujuan": "jEDk2o3M7FFlkPmq"
 }
 ```
