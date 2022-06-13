@@ -461,7 +461,7 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
 router.post('/api/transaksi', verifyToken, async (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    const {id_barang, ewallet, harga} = req.body;
+    const {id_barang, wallet, harga} = req.body;
     client.query('SELECT * FROM mk_barang WHERE id_barang = $1', [id_barang], (error, result) => {
       // console.log(result.rows);
       if (result.rowCount <= 0) {
