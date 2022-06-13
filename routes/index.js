@@ -8,10 +8,12 @@ const jsonParser = bodyParser.json();
 const moment = require('moment');
 const client = require('../db/conn.js');
 const config = require('../config');
+const cors = require('cors');
 
 module.exports = router;
 
 router.use(jsonParser);
+router.use(cors());
 
 // show all users
 router.get('/api/profile', verifyToken, (req, res, next) => {
