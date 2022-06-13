@@ -67,7 +67,7 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
               const myname = result.rows[0].name;
               const myemail = result.rows[0].email;
               const mypass = result.rows[0].pass;
-              const mycash = result.rows[0].jumlah;
+              const mycash = result.rows[0].saldo;
               const myuid = result.rows[0].id_user;
               const mywallet = result.rows[0].nomor_wallet;
               res.setHeader('Content-Type', 'application/json');
@@ -80,7 +80,7 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
                             name: myname,
                             pass: mypass,
                             email: myemail,
-                            jumlah: mycash,
+                            saldo: mycash,
                             nomor_wallet: mywallet,    
                           },
                           null,
@@ -171,7 +171,7 @@ router.post('/api/profile', async (req, res, next) => {
           const id_user = nanoid(16);
           const nomor_wallet = nanoid(16);
           client.query(
-              'INSERT INTO users(id_user, name, pass, email, role, jumlah, nomor_wallet) VALUES ($1, $2, $3, $4, \'user\', 0, $5)',
+              'INSERT INTO users(id_user, name, pass, email, role, saldo, nomor_wallet) VALUES ($1, $2, $3, $4, \'user\', 0, $5)',
               [id_user, req.body.name, req.body.pass, req.body.email, nomor_wallet],
               (error, result) => {
                 if (result.rowCount !== 0) {
@@ -226,7 +226,7 @@ router.post('/api/login', async (req, res, next) => {
             const myname = result.rows[0].name;
             const myemail = result.rows[0].email;
             const myrole = result.rows[0].role;
-            const mycash = result.rows[0].jumlah;
+            const mycash = result.rows[0].saldo;
             const myuid = result.rows[0].id_user;
             const mywallet = result.rows[0].nomor_wallet;
             const token = jwt.sign(
@@ -235,7 +235,7 @@ router.post('/api/login', async (req, res, next) => {
                   name: myname,
                   email: myemail,
                   role: myrole,
-                  jumlah: mycash,
+                  saldo: mycash,
                   nomor_wallet: mywallet,
                 },
                 config.secret,
@@ -294,7 +294,7 @@ router.put('/api/profile/:user', verifyToken, async (req, res, next) => {
 
     const {user} = req.params;
     client.query(
-        'UPDATE users SET jumlah = jumlah + $1 WHERE id_user = $2',
+        'UPDATE users SET saldo = saldo + $1 WHERE id_user = $2',
         [req.body.jumlah, req.id_user],
         (error, result) => {
           if (result.rowCount > 0) {
@@ -394,16 +394,16 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
       });
     };
     console.log(jumlah);
-    client.query('SELECT jumlah FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT saldo FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
       if (result.rowCount > 0) {
-        if (result.rows[0]['jumlah'] < jumlah) {
+        if (result.rows[0]['saldo'] < jumlah) {
           res.status(400);
           return res.json({
             status: 400,
             message: 'Saldo anda tidak cukup',
           });
       } else {
-        client.query('UPDATE users SET jumlah = jumlah - $1 WHERE id_user = $2', [jumlah, req.id_user], (error, result) => {
+        client.query('UPDATE users SET saldo = saldo - $1 WHERE id_user = $2', [jumlah, req.id_user], (error, result) => {
           if (result.rowCount > 0) {
             const todayDate = moment(new Date()).format('YYYY-MM-DD');
             const todayTime = moment(new Date()).format('HH:mm:ss');
@@ -697,7 +697,7 @@ router.post('/api/transfer', verifyToken, async (req, res, next) => {
         });
       } else {
         // cek apakah uang cukup
-        if (req.jumlah < jumlah) {
+        if (req.saldo < jumlah) {
           res.status(400);
           return res.json({
             status: 400,
@@ -705,9 +705,9 @@ router.post('/api/transfer', verifyToken, async (req, res, next) => {
           });
         } else {
           // kurangi uang pengguna
-          client.query('UPDATE users SET jumlah = jumlah - $1 WHERE id_user = $2', [jumlah, req.id_user]);
+          client.query('UPDATE users SET saldo = saldo - $1 WHERE id_user = $2', [jumlah, req.id_user]);
           // tambah rekening tujuan
-          client.query('UPDATE users SET jumlah = jumlah + $1 WHERE id_user = $2', [jumlah, tujuan]);
+          client.query('UPDATE users SET saldo = saldo + $1 WHERE id_user = $2', [jumlah, tujuan]);
           // masukkan proses ke histori transfer
           const todayDate = moment(new Date()).format('YYYY-MM-DD');
           const todayTime = moment(new Date()).format('HH:mm:ss');
