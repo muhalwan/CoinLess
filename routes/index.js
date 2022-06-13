@@ -8,7 +8,7 @@ const jsonParser = bodyParser.json();
 const moment = require('moment');
 const client = require('../db/conn.js');
 const config = require('../config');
-const cors = require('cors');
+const axios = require('axios');
 
 module.exports = router;
 
