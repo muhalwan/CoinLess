@@ -29,9 +29,9 @@ router.get('/login', (req, res, next) => {
   res.sendFile('/app/html/login.html');
 });
 
-router.get('/kantin', (req, res, next) => {
+router.get('/coinless', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/metakantin.html');
+  res.sendFile('/app/html/index.html');
 });
 
 // show all users
