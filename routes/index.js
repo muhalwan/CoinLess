@@ -386,16 +386,22 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     const jumlah = req.body.jumlah;
+    if (jumlah <= 0) {
+      res.status(400);
+      return res.json({
+        status: 400,
+        message: 'Jumlah tidak sesuai',
+      });
+    };
     console.log(jumlah);
     client.query('SELECT jumlah FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
       if (result.rowCount > 0) {
         if (result.rows[0]['jumlah'] < jumlah) {
           res.status(400);
-          return res.json(
-                      {
-                        status: 400,
-                        message: 'Saldo tidak mencukupi',
-                      });
+          return res.json({
+            status: 400,
+            message: 'Saldo anda tidak cukup',
+          });
       } else {
         client.query('UPDATE users SET jumlah = jumlah - $1 WHERE id_user = $2', [jumlah, req.id_user], (error, result) => {
           if (result.rowCount > 0) {
