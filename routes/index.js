@@ -409,7 +409,7 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
             const todayTime = moment(new Date()).format('HH:mm:ss');
             // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
             client.query(
-                "INSERT INTO history_barang(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'CoinLess')",
+                "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney) VALUES($1, $2, $3, $4, $5, 'CoinLess')",
                 [req.id_user, req.name, jumlah, todayTime, todayDate],
             );
             res.setHeader('Content-Type', 'application/json');
