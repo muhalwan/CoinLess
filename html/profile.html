@@ -136,7 +136,7 @@
             url: 'https://coinless.herokuapp.com/api/history/pembelian',
             dataType: "json",
             beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenCoin);
                 },
             success: function (data) {
                 console.log(data);
@@ -148,7 +148,7 @@
                                     '<p class="lead">' + data.data[i].jumlah + '</p>' +
                                 '</div>' +
                                 '<div class="col col-lg-4">' +
-                                    '<p class="lead">' + data.data[i].metode + '</p>' +
+                                    '<p class="lead">' + data.data[i].emoney + '</p>' +
                                 '</div>' + 
                                 '<div class="col col-lg-4">' +
                                     '<p class="lead">' + data.data[i].waktu + '</p>' +
@@ -172,7 +172,7 @@
             url: 'https://coinless.herokuapp.com/api/history/transfer/in',
             dataType: "json",
             beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenCoin);
                 },
             success: function (data) {
                 console.log(data);
@@ -208,7 +208,7 @@
             url: 'https://coinless.herokuapp.com/api/history/transfer/out',
             dataType: "json",
             beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenCoin);
                 },
             success: function (data) {
                 console.log(data);
@@ -244,7 +244,7 @@
             url: 'https://coinless.herokuapp.com/api/history/topup',
             dataType: "json",
             beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenCoin);
                 },
             success: function (data) {
                 console.log(data);
