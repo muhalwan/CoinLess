@@ -15,7 +15,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">MetaKantin</a>
+        <a class="navbar-brand" href="/">CoinLess</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -45,10 +45,9 @@
         <h1 class="display-4 text-center mb-5">Top Up</h1>
         <form action="/api/TopUp" method="post">
             <div class="form-group mt-3">
-                <label for="TopUp">Nominal Top Up</label>
-                <input type="text" class="form-control" id="Username" aria-describedby="TopUp"
-                    placeholder="Masukkan Nominal" name="Nominal" required>
-                <small id="username" class="form-text text-muted">Tolong Masukkan Jumlah!</small>
+                <label for="TopUp">Masukkan jumlah top up</label>
+                <input type="text" class="form-control" id="name" aria-describedby="TopUp"
+                    placeholder="10000" name="Nominal" required>
             <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Top Up</button>
         </form>
     </div>

@@ -15,7 +15,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">MetaKantin</a>
+        <a class="navbar-brand" href="/">CoinLess</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -45,11 +45,10 @@
         <h1 class="display-4 text-center mb-5">Pembayaran</h1>
         <form action="/api/login" method="post">
             <div class="form-group mt-3">
-                <label for="topup">Nominal Pembayaran</label>
-                <input type="text" class="form-control" id="Username" aria-describedby="topup"
-                    placeholder="Masukkan Nominal" name="Nominal" required>
-                <small id="username" class="form-text text-muted">Tolong Masukkan Jumlah!</small>
-            <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Top Up</button>
+                <label for="topup">Masukkan jumlah pembayaran</label>
+                <input type="text" class="form-control" id="name" aria-describedby="topup"
+                    placeholder="100000" name="Nominal" required>
+            <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Pembayaran</button>
         </form>
     </div>
 

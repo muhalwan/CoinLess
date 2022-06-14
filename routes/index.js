@@ -30,9 +30,9 @@ router.get('/login', (req, res, next) => {
   res.sendFile('/app/html/login.html');
 });
 
-router.get('/kantin', (req, res, next) => {
+router.get('/toko', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/CoinLS.html');
+  res.sendFile('/app/html/toko.html');
 });
 
 router.get('/my', (req, res, next) => {
