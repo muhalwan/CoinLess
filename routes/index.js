@@ -35,6 +35,11 @@ router.get('/coinless', (req, res, next) => {
   res.sendFile('/app/html/index.html');
 });
 
+router.get('/my', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.sendFile('/app/html/profile.html');
+});
+
 // show all users
 router.get('/api/profile', verifyToken, (req, res, next) => {
   try {
