@@ -40,6 +40,20 @@ router.get('/my', (req, res, next) => {
   res.sendFile('/app/html/profile.html');
 });
 
+router.get('/barang/:id_barang', (req, res, next) => {
+  const {fuid} = req.params;
+  url = 'https://met4kantin.herokuapp.com/api/foods/buy/' + fuid;
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  axios
+      .get(url)
+      .then((ress) => {
+        res.render('/app/views/foodView.ejs', ress.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+});
+
 // show all users
 router.get('/api/profile', verifyToken, (req, res, next) => {
   try {
@@ -936,4 +950,44 @@ router.get('/api/item/pembelian/:id', (req, res, next) => {
         );
   }
 });
-//end
+
+router.get('/api/barang/buy/:id_barang', (req, res, next) => {
+  try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {id_barang} = req.params;
+    client.query('SELECT nama, harga, id_barang FROM barang WHERE id_barang = $1', [id_barang], (errror, result) => {
+      if (result.rowCount > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200);
+        return res
+            .json(
+                {
+                  status: 200,
+                  data: result.rows[0],
+                },
+            );
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400);
+        return res
+            .json(
+                {
+                  status: 400,
+                  message: 'Tidak ada barang',
+                },
+            );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500);
+    return res
+        .json(
+            {
+              status: 500,
+              message: 'Server error',
+            },
+        );
+  }
+});
