@@ -477,7 +477,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
             headers: {Authorization: token},
           };
           const payload = {
-            jumlah: harga,
+            harga: harga,
           };
           axios
               .put('https://coinless.herokuapp.com/api/pembelian', payload, config)
