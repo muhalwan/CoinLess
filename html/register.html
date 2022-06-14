@@ -70,7 +70,7 @@
               encode: true,
               success: function(data) {
                 alert('Akun berhasil terdaftar di CoinLess')
-                window.location = "https://coinless.herokuapp.com/api/login";
+                window.location = "https://coinless.herokuapp.com/login";
               },
               error: function(jqXHR, textStatus, errorThrown) {
                 const myObj = JSON.parse(jqXHR.responseText);     
