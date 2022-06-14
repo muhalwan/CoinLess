@@ -20,6 +20,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+
             <ul class="navbar-nav ml-auto">
                 <div class="dropdown-divider"></div>
                 <li class="nav-item">
@@ -29,10 +30,19 @@
         </div>
     </nav>
 
+    <div class="my-5 container">
+        <h2 class="text-center my-5 display-2">Welcome to Ecommerce CoinLess</h2>
+        <div class="row">
+        </div>
+    </div>
 
     <div class="my-5 container">
-        <h2 class="text-center my-5 display-2">CoinLess eCommerce</h2>
+        <h2 class="text-center my-5 display-2">Our menus</h2>
+
         <div class="row">
+            <div class="col" id="barang">
+ 
+            </div>
         </div>
     </div>
 
@@ -44,6 +54,114 @@
     <br class="my-5">
     <br class="my-5">
     <br class="my-5">
+    
+
+    
+
+    <div class="">
+        <footer class=" footer text-center text-white" style="background-color: #3f51b5">
+            <!-- Grid container -->
+            <div class="container">
+                <!-- Section: Links -->
+                <section class="mt-5">
+                    <!-- Grid row-->
+                    <div class="row text-center d-flex justify-content-center pt-5">
+                        <!-- Grid column -->
+                        <div class="col-md-2">
+                            <h6 class="text-uppercase font-weight-bold">
+                                <a href="#!" class="text-white">About us</a>
+                            </h6>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-2">
+                            <h6 class="text-uppercase font-weight-bold">
+                                <a href="#!" class="text-white">Products</a>
+                            </h6>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-2">
+                            <h6 class="text-uppercase font-weight-bold">
+                                <a href="#!" class="text-white">Awards</a>
+                            </h6>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-2">
+                            <h6 class="text-uppercase font-weight-bold">
+                                <a href="#!" class="text-white">Help</a>
+                            </h6>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-2">
+                            <h6 class="text-uppercase font-weight-bold">
+                                <a href="#!" class="text-white">Contact</a>
+                            </h6>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                    <!-- Grid row-->
+                </section>
+                <!-- Section: Links -->
+
+                <hr class="my-5" />
+
+                <!-- Section: Text -->
+                <section class="mb-5">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-8">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
+                                distinctio earum repellat quaerat voluptatibus placeat nam,
+                                commodi optio pariatur est quia magnam eum harum corrupti
+                                dicta, aliquam sequi voluptate quas.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <!-- Section: Text -->
+
+                <!-- Section: Social -->
+                <section class="text-center mb-5">
+                    <a href="" class="text-white me-4">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="bi bi-google"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="bi bi-github"></i>
+                    </a>
+                </section>
+                <!-- Section: Social -->
+            </div>
+            <!-- Grid container -->
+
+            <!-- Copyright -->
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+                © 2020 Copyright:
+                <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer -->
+    </div>
+    <!-- End of .container -->
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -55,7 +173,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
      <script>
         $.ajax({
             type: 'GET',
@@ -65,14 +182,13 @@
                 console.log(data);
                 if (data) {
                     for (let i = 0; i < data.data.length; i++) {
-                        $('#makanan').append(
+                        $('#barang').append(
                             '<div class="row mb-3">' + 
                             '<div class="col col-sm-12 col-lg-4 text-center">' +
                             '<img src="https://via.placeholder.com/150" alt="" class="img-fluid">' +
                             '</div>' +
                             '<div class="col col-sm-12 col-lg-4 my-sm-3 my-lg-0">' +
                             '<h4 class="text-sm-center text-lg-left">' + data.data[i].nama_barang + '</h4>' +
-                            '<p class="lead text-sm-center text-lg-left">' + data.data[i].deskripsi + '</p>' +
                             '</div>' +
                             '<div class="col col-sm-12 text-center col-lg-4">' +
                             '<div class="row">' +
@@ -81,7 +197,7 @@
                             '</div>' +
                             '</div>' +
                             '<div class="col col-lg-12 col-sm-12">' +
-                                '<a href="https://coinless.herokuapp.com/toko' + data.data[i].id_barang + '"' + 'class="btn btn-outline-success btn-block">Beli</a>' +
+                                '<a href="https://coinless.herokuapp.com/barang' + data.data[i].id_barang + '"' + 'class="btn btn-outline-success btn-block">Beli</a>' +
                             '</div>' +
                             '</div>' +
                             '</div>'
