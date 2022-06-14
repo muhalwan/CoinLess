@@ -520,8 +520,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
         } else if (wallet === 'otakupay') {
           axios
               .post('https://opay-v2.herokuapp.com/auth/login', {
-                username: req.body.usernameO,
-                password: req.body.passwordO,
+                username: 'coinless',
+                password: 'coinless123',
               })
               .then((ress) => {
                 otakupayToken = ress.data.token;
@@ -569,8 +569,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
         } else if (wallet === 'egil') {
           axios
               .post('https://egilwallet.herokuapp.com/api/login', {
-                email: req.body.emailG,
-                password: req.body.passwordG,
+                email: 'coinless@gmail.com',
+                password: 'coinless123',
               })
               .then((ress) => {
                 egilToken = ress.data.accesToken;
@@ -631,8 +631,8 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
           // dapatin jwt
           axios
               .post('https://api-ecia.herokuapp.com/api/login', {
-                email: req.body.emailE,
-                pass: req.body.passE,
+                email: 'coinless@test.com',
+                pass: 'coinless123',
               })
               .then((ress) => {
                 // dapatin info
