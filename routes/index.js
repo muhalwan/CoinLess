@@ -642,11 +642,16 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                 const config = {
                   headers: {Authorization: `Bearer ${egilToken}`},
                 };
-                const emailEgil = ress.data.email;
-                const payload = {                 
-                  harga: harga,
-                  email: emailEgil,
-                };
+                axios
+                    .get('https://egilwallet.herokuapp.com/api/profile', config)
+                    .then((rass) => {
+                      // return res.send(rass.data);
+                      // lakukan pembelian barang
+                      const emailEgil = rass.data.email;
+                      const payload = {
+                        email: emailEgil,
+                        harga: harga,
+                      };
                 axios
                     .post('https://egilwallet.herokuapp.com/api/pembelian', payload, config)
                     .then((riss) => {
