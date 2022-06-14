@@ -28,7 +28,6 @@ Method | End-Point | Autorisasi | Deskripsi
 `PUT` |  /api/profile/:id | YES | Top up ke user
 `GET` | /api/history/topup | YES | Melihat history topup
 `PUT` | /api/pembelian | YES | Melakukan pembayaran barang
-`POST` | /api/pembelian | YES | Pembayaran dengan ewallet coinless
 `POST` | /api/transaksi | YES | Pembayaran dengan ewallet lain
 `GET` | /api/history/pembelian | YES | Melihat history pembelian
 `POST` | /api/transfer | YES | Transfer antar user
