@@ -638,7 +638,6 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
               })
               .then((ress) => {
                 egilToken = ress.data.accesToken;
-                console.log(egilToken);
                 const config = {
                   headers: {Authorization: `Bearer ${egilToken}`},
                 };
@@ -652,12 +651,12 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                         email: emailEgil,
                         harga: harga,
                       };
-                axios
+                  axios
                     .post('https://egilwallet.herokuapp.com/api/pembelian', payload, config)
                     .then((riss) => {
                       // res.send(riss.data);
                       // kalau pembarana berhasil
-                      if (riss.data.msg === 'Payment Success') {
+                      if (riss.data.status === 200) {
                         const todayDate = moment(new Date()).format('YYYY-MM-DD');
                         const todayTime = moment(new Date()).format('HH:mm:ss');
                         // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
