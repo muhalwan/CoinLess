@@ -630,7 +630,58 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                 // return res.send(error.response.data);
                 console.log(error);
               });
-        } else {
+        } else if (wallet === 'egil') {
+          axios
+              .post('https://egilwallet.herokuapp.com/api/login', {
+                username: 'coinless@gmail.com',
+                password: 'coinless123',
+              })
+              .then((ress) => {
+                egilToken = ress.data.accesToken;
+                console.log(egilToken);
+                const config = {
+                  headers: {Authorization: `Bearer ${egilToken}`},
+                };
+                const emailEgil = ress.data.email;
+                const payload = {                 
+                  harga: harga,
+                  email: emailEgil,
+                };
+                axios
+                    .post('https://egilwallet.herokuapp.com/api/pembelian', payload, config)
+                    .then((riss) => {
+                      // res.send(riss.data);
+                      // kalau pembarana berhasil
+                      if (riss.data.msg === 'Payment Success') {
+                        const todayDate = moment(new Date()).format('YYYY-MM-DD');
+                        const todayTime = moment(new Date()).format('HH:mm:ss');
+                        // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
+                        client.query(
+                            "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney, nama_barang) VALUES($1, $2, $3, $4, $5, 'egil', $6)",
+                            [req.id_user, req.name, harga, todayTime, todayDate, req.body.nama_barang],
+                        );
+                        res.status(200);
+                        return res.json({
+                          status: 200,
+                          message: 'Pembayaran dengan egil berhasil',
+                        });
+                        // lakukan query disini
+                      }
+                    })
+                    .catch((error) => {
+                      res.setHeader('Content-Type', 'application/json');
+                      res.status(400);
+                      return res.send(error.response.data);
+                    });
+                // res.cookie('harpay', ress.data.token);
+                // return res.send(ress.data);
+              })
+              .catch((error) => {
+                res.setHeader('Content-Type', 'application/json');
+                res.status(400);
+                return res.send(error.response.data);
+              });
+            } else {
           res.status(400);
           return res.json({
             status: 400,
