@@ -393,9 +393,10 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
         message: 'Jumlah tidak sesuai',
       });
     };
-    client.query('SELECT * FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
+    console.log(jumlah);
+    client.query('SELECT saldo FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
       if (result.rowCount > 0) {
-        if (req.saldo < jumlah) {
+        if (result.rows[0]['saldo'] < jumlah) {
           res.status(400);
           return res.json({
             status: 400,
