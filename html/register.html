@@ -26,7 +26,7 @@
 
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="/">MetaKantin</a>
+      <a class="navbar-brand" href="/">Coinless</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -63,19 +63,16 @@
       <h1 class="display-4 text-center mb-5">Register</h1>
       <form method="post" id="form">
         <div class="form-group mt-3">
-          <label for="username">Username</label>
+          <label for="username">Name</label>
           <input
             type="text"
             class="form-control"
-            id="username"
-            aria-describedby="username"
-            placeholder="Enter username"
-            name="username"
+            id="Name"
+            aria-describedby="Name"
+            placeholder="Enter Name"
+            name="Name"
             required
           />
-          <small id="username" class="form-text text-muted"
-            >Unique username please!</small
-          >
         </div>
         <div class="form-group mt-3">
             <label for="email">Email</label>
@@ -88,24 +85,17 @@
               name="email"
               required
             />
-            <small id="username" class="form-text text-muted"
-              >Dont forget the @!</small
-            >
           </div>
         <div class="form-group mt-3">
           <label for="password">Password</label>
           <input
-            type="password"
-            id="password"
+            type="pass"
+            id="pass"
             class="form-control"
             aria-describedby="passwordHelpBlock"
             name="pass"
             required
           />
-          <small id="passwordHelpBlock" class="form-text text-muted">
-            Your password must be 8-20 characters long, contain letters and
-            numbers, and must not contain spaces, special characters, or emoji.
-          </small>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" id="submit">
           Login
@@ -117,27 +107,27 @@
     <div class="container my-5">
       <div class="row">
         <div class="col col-lg-4 col-sm-12 text-center my-sm-5 my-lg-0">
-          <h3>Harpay</h3>
+          <h3>Egil</h3>
           <form action="/api/pay" method="post" class="" id="formHarpayPay">
             <div class="form-group">
-                <label for="nameH">Name</label>
-                <input type="text" class="form-control" id="nameH" name="nameH" placeholder="Name">
+                <label for="nameg">Name</label>
+                <input type="text" class="form-control" id="nameg" name="nameg" placeholder="Name">
             </div>
             <div class="form-group">
-                <label for="emailH">Email</label>
-                <input type="text" class="form-control" id="emailH" name="emailH" placeholder="Email">
+                <label for="usernameg">Username</label>
+                <input type="text" class="form-control" id="usernameg" name="usernameg" placeholder="Username">
             </div>
             <div class="form-group">
-                <label for="telpH">Telp</label>
-                <input type="text" class="form-control" id="telpH" name="telpH" placeholder="Telp">
+                <label for="phoneg">Phone</label>
+                <input type="text" class="form-control" id="phoneg" name="phoneg" placeholder="Phone">
             </div>
             <div class="form-group">
-                <label for="pinH">PIN</label>
-                <input type="text" class="form-control" id="pinH" name="pinH" placeholder="XXXXXX">
+                <label for="emailg">Email</label>
+                <input type="text" class="form-control" id="emailg" name="emailg" placeholder="youremail@mail.com">
             </div>
             <div class="form-group">
-                <label for="passwordH">Password</label>
-                <input type="password" class="form-control" id="passwordH" placeholder="Password" name="passwordH">
+                <label for="passwordg">Password</label>
+                <input type="password" class="form-control" id="passwordg" placeholder="Password" name="passwordg">
             </div>
             <button type="submit" class="btn btn-primary my-3">Submit</button>
         </form>
