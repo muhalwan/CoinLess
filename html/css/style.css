@@ -441,34 +441,14 @@ footer .footer-bar .payment-mode img{
 	margin-left: 10px;
 }
 
-/* About Page */
-main .about{
+/*login/register Page */
+main .logreg{
 	padding: 30px;
 }
-main .about .heading{
-	text-align: left;
-}
-main .about .heading h2{
-	color: var(--darkStaleGray);
-	font-size: 24px;
-	font-weight: bold;
-	text-transform: uppercase;
-	text-decoration: none;
-	letter-spacing: 1px;
-	margin-bottom: 10px;
-}
-main .about p{
-	letter-spacing: 0.6;
-	line-height: 24px;
-}
-/*contact Page */
-main .contact{
-	padding: 30px;
-}
-main .contact .heading{
+main .logreg .heading{
 	text-align: center;
 }
-main .contact .heading h2{
+main .logreg .heading h2{
 	color: var(--darkStaleGray);
 	font-size: 24px;
 	font-weight: bold;
@@ -477,12 +457,12 @@ main .contact .heading h2{
 	letter-spacing: 1px;
 	margin-bottom: 10px;
 }
-main .contact form{
+main .logreg form{
 	width: 60%;
 	margin: 0 auto;
 	margin-top: 40px;
 }
-main .contact form input[type="submit"]{
+main .logreg form input[type="submit"]{
 	background-color: var(--khaki);
 	border: 1px solid transparent;
 	color: var(--darkStaleGray);
