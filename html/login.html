@@ -69,7 +69,6 @@
             class="form-control"
             id="emailL"
             aria-describedby="email"
-            placeholder="Enter email"
             name="email"
             required
           />
@@ -90,7 +89,7 @@
         </button>
       </form>
     </div>
-
+<!--
     <div class="container my-5">
       <div class="row">
         <div class="col col-lg-4 col-sm-12 text-center my-sm-5 my-lg-0">
@@ -139,7 +138,7 @@
           
         </div>
       </div>
-    </div>
+    </div> -->
 
     <p id="respond"></p>
 
@@ -190,8 +189,8 @@
           $("#formEgil").submit(function (event) {
             event.preventDefault();
             var formData = {
-              email: $("#emailG").val(),
-              password: $("#passwordG").val(),
+              email: 'coinless@gmail.com',
+              password: 'coinless123',
             };
   
             $.ajax({
@@ -216,8 +215,8 @@
           $("#formEcia").submit(function (event) {
             event.preventDefault();
             var formData = {
-              email: $("#emailE").val(),
-              pass: $("#passE").val(),
+              email: 'coinless@test.com',
+              pass: 'coinless123',
             };
   
             $.ajax({
@@ -242,8 +241,8 @@
           $("#formOtakuPay").submit(function (event) {
             event.preventDefault();
             var formData = {
-              username: $("#usernameO").val(),
-              password: $("#passwordO").val(),
+              username: coinless,
+              password: coinless123,
             };
   
             $.ajax({
