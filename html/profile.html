@@ -49,9 +49,6 @@
                     <h3 class="display-5" id="saldo">Saldo: 0</h3>
                 </div>
                 <div class="row">
-                    <h3 class="display-5" id="cashG">Saldo: 0</h3>
-                </div>
-                <div class="row">
                     <h3 class="display-5" id="cashE">Saldo: 0</h3>
                 </div>
                 <div class="row">
@@ -281,7 +278,7 @@
                 if (data) {
                     $('#nama').html('Hello, ' + data.data.name);
                     $('#id').html('ID: '+data.data.id_user);
-                    $('#cash').html('Saldo Coinless: ' + data.data.saldo);
+                    $('#saldo').html('Saldo Coinless: ' + data.data.saldo);
                     idUser = data.data.id_user;
                 }
             },
