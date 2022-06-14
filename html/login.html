@@ -189,10 +189,10 @@
           $("#formEgil").submit(function (event) {
             event.preventDefault();
             var formData = {
-              email: $("#emailE").val(),
-              pass: $("#passE").val(),
+              email: $("#emailG").val(),
+              pass: $("#passG").val(),
             };
-            
+
             $.ajax({
               type: "POST",
               url: "https://egilwallet.herokuapp.com/api/login",
