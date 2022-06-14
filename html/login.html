@@ -94,14 +94,14 @@
       <div class="row">
         <div class="col col-lg-4 col-sm-12 text-center my-sm-5 my-lg-0">
           <h3>Egil</h3>
-          <form action="/api/pay" method="post" class="" id="formEgil">
+          <form action="/api/pembelian" method="post" class="" id="formEgil">
             <div class="form-group">
-                <label for="emailG">Email</label>
+                <label for="email">Email</label>
                 <input type="text" class="form-control" id="emailG" name="emailG" placeholder="email">
             </div>
             <div class="form-group">
-                <label for="passwordG">Password</label>
-                <input type="password" class="form-control" id="passwordG" placeholder="password" name="passwordH">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="passwordG" placeholder="password" name="passwordG">
             </div>
             <button type="submit" class="btn btn-primary my-3">Submit</button>
         </form>
@@ -109,7 +109,7 @@
 
         <div class="col col-lg-4 col-sm-12 text-center my-sm-5 my-lg-0">
           <h3>Ecia</h3>
-          <form action="/api/pay" method="post" class="" id="formEcia">
+          <form action="/api/pembelian" method="post" class="" id="formEcia">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="text" class="form-control" id="emailE" name="emailE" placeholder="email">
@@ -124,7 +124,7 @@
 
         <div class="col col-lg-4 col-sm-12 text-center my-sm-5 my-lg-0">
           <h3>Otakupay</h3>
-          <form action="/api/pay" method="post" class="" id="formOtakuPay">
+          <form action="/api/pembelian" method="post" class="" id="formOtakuPay">
             <div class="form-group">
                 <label for="usernameO">Username</label>
                 <input type="text" class="form-control" id="usernameO" name="usernameO" placeholder="Username">
@@ -190,7 +190,7 @@
             event.preventDefault();
             var formData = {
               email: $("#emailG").val(),
-              pass: $("#passG").val(),
+              pass: $("#passwordG").val(),
             };
 
             $.ajax({
