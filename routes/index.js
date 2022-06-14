@@ -394,9 +394,9 @@ router.put('/api/pembelian', verifyToken, async (req, res, next) => {
       });
     };
     console.log(jumlah);
-    client.query('SELECT saldo FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
+    client.query('SELECT * FROM users WHERE id_user = $1', [req.id_user], (error, result) => {
       if (result.rowCount > 0) {
-        if (result.rows[0]['saldo'] < jumlah) {
+        if (req.saldo < jumlah) {
           res.status(400);
           return res.json({
             status: 400,
@@ -477,7 +477,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
             headers: {Authorization: token},
           };
           const payload = {
-            jumlah: harga,
+            harga: harga,
           };
           axios
               .put('https://coinless.herokuapp.com/api/pembelian', payload, config)
@@ -546,6 +546,67 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                 res.status(400);
                 return res.send(error.response.data);
               });
+        } else if (wallet === 'egil') {
+          axios
+              .post('https://egilwallet.herokuapp.com/api/login', {
+                email: 'coinless@gmail.com',
+                password: 'coinless123',
+              })
+              .then((ress) => {
+                egilToken = ress.data.accesToken;
+                const config = {
+                  headers: {Authorization: `Bearer ${egilToken}`},
+                };
+                axios
+                    .get('https://egilwallet.herokuapp.com/api/profile', config)
+                    .then((rass) => {
+                      // return res.send(rass.data);
+                      // lakukan pembelian barang
+                      const emailEgil = rass.data.email;
+                      const payload = {
+                        email: emailEgil,
+                        harga: harga,
+                      };
+                  axios
+                    .post('https://egilwallet.herokuapp.com/api/pembelian', payload, config)
+                    .then((riss) => {
+                      // res.send(riss.data);
+                      // kalau pembarana berhasil
+                      if (riss.data.status === 200) {
+                        const todayDate = moment(new Date()).format('YYYY-MM-DD');
+                        const todayTime = moment(new Date()).format('HH:mm:ss');
+                        // console.log(req.uid, req.name, jumlah, todayDate, todayTime);
+                        client.query(
+                            "INSERT INTO history_pembelian(id_user, name, jumlah, waktu, tanggal, emoney, nama_barang) VALUES($1, $2, $3, $4, $5, 'egil', $6)",
+                            [req.id_user, req.name, harga, todayTime, todayDate, req.body.nama_barang],
+                        );
+                        res.status(200);
+                        return res.json({
+                          status: 200,
+                          message: 'Pembayaran dengan egil berhasil',
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      // res.setHeader('Content-Type', 'application/json');
+                      // res.status(400);
+                      // return res.send(error.response.data);
+                      console.log(error);
+                    });
+              })
+              .catch((error) => {
+                // res.setHeader('Content-Type', 'application/json');
+                // res.status(400);
+                // return res.send(error.response.data);
+                console.log(error);
+              });
+      })
+      .catch((error) => {
+        // res.setHeader('Content-Type', 'application/json');
+        // res.status(400);
+        // return res.send(error.response.data);
+        console.log(error);
+      });
         } else if (wallet === 'ecia') {
           // dapatin jwt
           axios
@@ -568,7 +629,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                       const walletEcia = rass.data.nomor_wallet;
                       const payloadBeli = {
                         id_user: idEcia,
-                        nama_barang: result.rows[0]['nama'],
+                        nama_barang: result.rows[0]['nama_barang'],
                         harga: harga,
                         nomor_wallet: walletEcia,
                       };
@@ -630,7 +691,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                 // return res.send(error.response.data);
                 console.log(error);
               });
-        } else {
+            } else {
           res.status(400);
           return res.json({
             status: 400,
@@ -869,3 +930,4 @@ router.get('/api/item/pembelian/:id', (req, res, next) => {
         );
   }
 });
+//end
