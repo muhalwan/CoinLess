@@ -30,25 +30,27 @@
 	<div class="container">
 		<main>
 			<div class="contact">
+				<form action="/api/register" method="post">
 				<h2 class="heading">Registration Form</h2>
 				<form class="checkout-form">
                     <div class="form-group">
 						<label>Name</label>
 						<input type="text" id="name" name="name">
 					</div>
-                    <div class="form-group">
-						<label>Password</label>
-						<input type="email" id="email" name="email">
-					</div>
 					<div class="form-group">
 						<label>Email Address</label>
 						<input type="email" id="email" name="email">
+					</div>
+                    <div class="form-group">
+						<label>Password</label>
+						<input type="password" id="password" name="password">
 					</div>
 					<div class="form-group">
 						<label></label>
 						<input type="submit" id="contact" name="contact" value="Register">
 					</div>
 				</form>	
+			</form>
 			</div>
 		</main> <!-- Main Area -->
 	</div>
