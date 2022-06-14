@@ -34,7 +34,7 @@
 				<form class="checkout-form" action="/api/profile" method="post">
                     <div class="form-group">
 						<label>Name</label>
-						<input type="text" id="username" name="username">
+						<input type="text" id="name" name="name">
 					</div>
 					<div class="form-group">
 						<label>Email Address</label>
@@ -57,7 +57,7 @@
           $("#form").submit(function (event) {
             event.preventDefault();
             var formData = {
-              name: $("#username").val(),
+              name: $("#name").val(),
               email: $("#email").val(),
               pass: $("#password").val(),
             };
