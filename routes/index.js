@@ -30,7 +30,7 @@ router.get('/login', (req, res, next) => {
   res.sendFile('/app/html/login.html');
 });
 
-router.get('/coinless', (req, res, next) => {
+router.get('/kantin', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.sendFile('/app/html/CoinLS.html');
 });
