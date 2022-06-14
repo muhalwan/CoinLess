@@ -108,26 +108,18 @@
       <div class="row">
         <div class="col col-lg-4 col-sm-12 text-center my-sm-5 my-lg-0">
           <h3>Egil</h3>
-          <form action="/api/pay" method="post" class="" id="formHarpayPay">
+          <form action="/api/pay" method="post" class="" id="formEgil">
             <div class="form-group">
-                <label for="nameg">Name</label>
-                <input type="text" class="form-control" id="nameg" name="nameg" placeholder="Name">
+                <label for="usernameG">Username</label>
+                <input type="text" class="form-control" id="usernameG" name="usernameG" placeholder="Username">
             </div>
             <div class="form-group">
-                <label for="usernameg">Username</label>
-                <input type="text" class="form-control" id="usernameg" name="usernameg" placeholder="Username">
+                <label for="emailG">Email</label>
+                <input type="text" class="form-control" id="emailG" name="emailG" placeholder="youremail@mail.com">
             </div>
             <div class="form-group">
-                <label for="phoneg">Phone</label>
-                <input type="text" class="form-control" id="phoneg" name="phoneg" placeholder="Phone">
-            </div>
-            <div class="form-group">
-                <label for="emailg">Email</label>
-                <input type="text" class="form-control" id="emailg" name="emailg" placeholder="youremail@mail.com">
-            </div>
-            <div class="form-group">
-                <label for="passwordg">Password</label>
-                <input type="password" class="form-control" id="passwordg" placeholder="Password" name="passwordg">
+                <label for="passwordG">Password</label>
+                <input type="password" class="form-control" id="passwordG" placeholder="Password" name="passwordG">
             </div>
             <button type="submit" class="btn btn-primary my-3">Submit</button>
         </form>
@@ -203,13 +195,13 @@
   
             $.ajax({
               type: "POST",
-              url: "https://met4kantin.herokuapp.com/api/profile",
+              url: "https://coinless.herokuapp.com/api/profile",
               data: formData,
               dataType: "json",
               encode: true,
               success: function(data) {
                 alert('Berhasil daftar Metamoney')
-                window.location = "https://met4kantin.herokuapp.com/login";
+                window.location = "https://coinless.herokuapp.com/login";
               },
               error: function(jqXHR, textStatus, errorThrown) {
                 const myObj = JSON.parse(jqXHR.responseText);     
@@ -220,27 +212,23 @@
         });
 
         $(() => {
-          $("#formHarpayPay").submit(function (event) {
+          $("#formEgil").submit(function (event) {
             event.preventDefault();
             var formData = {
-              name: $("#nameH").val(),
-              email: $("#emailH").val(),
-              noTelp: parseInt($("#telpH").val(), 10),
-              password: $("#passwordH").val(),
-              konfirmasiPassword: $("#passwordH").val(),
-              pin: parseInt($("#pinH").val(), 10),
-              konfirmasiPin: parseInt($("#pinH").val(), 10),
+              username: $("#usernameg").val(),
+              email: $("#emailg").val(),
+              password: $("#passwordg").val(),
             };
   
             $.ajax({
               type: "POST",
-              url: "https://harpay-api.herokuapp.com/auth/registrasi",
+              url: "https://egilwallet.herokuapp.com/api/profile",
               data: formData,
               dataType: "json",
               encode: true,
               success: function(data) {
-                alert('Berhasil daftar Harpay')
-                window.location = "https://met4kantin.herokuapp.com/login";
+                alert('Berhasil daftar Egil')
+                window.location = "https://coinless.herokuapp.com/login";
               },
               error: function(jqXHR, textStatus, errorThrown) {
                 const myObj = JSON.parse(jqXHR.responseText);     
