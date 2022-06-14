@@ -32,7 +32,7 @@ router.get('/login', (req, res, next) => {
 
 router.get('/coinless', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/index.html');
+  res.sendFile('/app/html/CoinLS.html');
 });
 
 router.get('/my', (req, res, next) => {
