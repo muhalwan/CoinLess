@@ -633,7 +633,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
         } else if (wallet === 'egil') {
           axios
               .post('https://egilwallet.herokuapp.com/api/login', {
-                username: 'coinless@gmail.com',
+                email: 'coinless@gmail.com',
                 password: 'coinless123',
               })
               .then((ress) => {
