@@ -163,7 +163,7 @@ PUT https://coinless.herokuapp.com/api/pembelian
 Authorization: Bearer Token
 
 {
-    "jumlah": "420000",
+    "jumlah": 420000,
     "id_user": "jEDk2o3M7FFlkPmq",
     "nama_barang": "BLACK MEN'S WATCH"
 }
@@ -190,7 +190,7 @@ Authorization: Bearer Token
     "wallet": "otakupay",
     "id_barang": "1",
     "nama_barang": "BLACK MEN'S WATCH",
-    "harga": "420000"
+    "harga": 420000
 }
 ```
 
@@ -236,7 +236,7 @@ POST https://coinless.herokuapp.com/api/transfer
 Authorization: Bearer Token
 
 {
-    "jumlah": "100000",
+    "jumlah": 100000,
     "tujuan": "jEDk2o3M7FFlkPmq"
 }
 ```
