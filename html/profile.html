@@ -258,9 +258,6 @@
                                 '<div class="col col-lg-4">' +
                                     '<p class="lead">' + data.data[i].name + '</p>' +
                                 '</div>' + 
-                                '<div class="container">' +
-                                    '<hr class="mb-5">' +
-                                '</div>' +
                             '</div>'
                         );
                     }
@@ -284,7 +281,7 @@
                 if (data) {
                     $('#nama').html('Hello, ' + data.data.name);
                     $('#id').html('ID: '+data.data.id_user);
-                    $('#cash').html('Meta Money: ' + data.data.saldo);
+                    $('#cash').html('Saldo Coinless: ' + data.data.saldo);
                     idUser = data.data.id_user;
                 }
             },
