@@ -25,16 +25,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:history.back()">Back</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
-                </li> -->
             </ul>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="my-5 text-center">
-            <img src="https://i.postimg.cc/BvRN7M07/MK.png" alt="" style="max-width: 20%;" class="img-fluid">
+    <div class="my-5 container">
+        <h2 class="text-center my-5 display-2">CoinLess eCommerce</h2>
+        <div class="row">
         </div>
     </div>
 
@@ -45,20 +42,20 @@
     <div class="container my-5">
         <div class="row">
             <div class="col col-sm-12 col-lg-6 text-sm-center text-lg-left px-lg-5">
-                <h3 class="display-5" id="uid">123</h3>
+                <h3 class="display-5" id="id_user">123</h3>
             </div>
             <div class="col col-sm-12 col-lg-6 text-sm-center text-lg-right px-lg-5">
                 <div class="row">
-                    <h3 class="display-5" id="saldo">Money: 123</h3>
+                    <h3 class="display-5" id="saldo">Saldo: Tidak terhubung</h3>
                 </div>
                 <div class="row">
-                    <h3 class="display-5" id="">Money: 123</h3>
+                    <h3 class="display-5" id="cashG">Saldo: Tidak terhubung ke ewallet Egil</h3>
                 </div>
                 <div class="row">
-                    <h3 class="display-5" id="cashE">Money: 123</h3>
+                    <h3 class="display-5" id="cashE">Saldo: Tidak terhubung ke ewallet Ecia</h3>
                 </div>
                 <div class="row">
-                    <h3 class="display-5" id="cashO">Money: 123</h3>
+                    <h3 class="display-5" id="cashO">Saldo: Tidak terhubung ke ewallet Otakupay</h3>
                 </div>
             </div>
         </div>
@@ -69,60 +66,18 @@
             <div class="col col-sm-12 col-lg-6 text-sm-center text-lg-center px-lg-5" id="bayar">
                 <h5 class="">History Bayar</h5>
                 <hr class="my-5">
-                <!-- <div class="row">
-                    <div class="col col-lg-4">
-                        <p class="lead">10.000</p>
-                    </div>
-                    <div class="col col-lg-4">
-                        <p class="lead">Metamoney</p>
-                    </div>
-                    <div class="col col-lg-4">
-                        <p class="lead">23:23:23</p>
-                    </div>
-                    <div class="container">
-                        <hr class="mb-5">
-                    </div>
-                </div> -->
             </div>
             <div class="col col-sm-12 col-lg-6 text-sm-center text-lg-center px-lg-5">
                 <div class="row text-center mb-5">
                     <div class="col col-lg-12 text-center" id="transferMasuk">
                         <h5 class="">History Transfer Masuk</h5>
                         <hr class="my-5">
-                        <!-- <div class="row">
-                            <div class="col col-lg-4">
-                                <p class="lead">10.000</p>
-                            </div>
-                            <div class="col col-lg-4">
-                                <p class="lead">123abc</p>
-                            </div>
-                            <div class="col col-lg-4">
-                                <p class="lead">23:23:23</p>
-                            </div>
-                            <div class="container">
-                                <hr class="mb-5">
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="row text-center">
                     <div class="col col-lg-12 text-center" id="transferKeluar">
                         <h5 class="">History Transfer Keluar</h5>
                         <hr class="my-5">
-                        <!-- <div class="row">
-                            <div class="col col-lg-4">
-                                <p class="lead">10.000</p>
-                            </div>
-                            <div class="col col-lg-4">
-                                <p class="lead">123abc</p>
-                            </div>
-                            <div class="col col-lg-4">
-                                <p class="lead">23:23:23</p>
-                            </div>
-                            <div class="container">
-                                <hr class="mb-5">
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -141,14 +96,10 @@
                             class="form-control"
                             id="jumlah"
                             aria-describedby="jumlah"
-                            placeholder="Masukkan jumlah topup"
+                            placeholder="10000"
                             name="jumlah"
                             required
                         />
-                        <small id="jumlah" class="form-text text-muted"
-                            >Topup dompet anda!
-                        </small
-                        >
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg mt-4" id="submit">
                     Topup
@@ -158,20 +109,6 @@
             <div class="col col-lg-6 col-sm-12 mt-sm-3 text-center" id="topup">
                 <h5 class="">History Topup</h5>
                 <hr class="my-5">
-                <!-- <div class="row">
-                    <div class="col col-lg-4">
-                        <p class="lead">10.000</p>
-                    </div>
-                    <div class="col col-lg-4">
-                        <p class="lead">Metamoney</p>
-                    </div>
-                    <div class="col col-lg-4">
-                        <p class="lead">23:23:23</p>
-                    </div>
-                    <div class="container">
-                        <hr class="mb-5">
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
@@ -187,8 +124,8 @@
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
-    const tokenMeta = getCookie("masuk");
-    const tokenHarpay = getCookie("harpay");
+    const tokenCoin = getCookie("masuk");
+    const tokenEgil = getCookie("egil");
     const tokenEcia = getCookie("ecia");
     const tokenOtakupay = getCookie("otakupay");
     let idUser = '';
@@ -196,7 +133,7 @@
     // bayar
     $.ajax({
             type: 'GET',
-            url: 'https://met4kantin.herokuapp.com/api/history/pays',
+            url: 'https://coinless.herokuapp.com/api/history/pembelian',
             dataType: "json",
             beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
@@ -232,7 +169,7 @@
         // transfer in
         $.ajax({
             type: 'GET',
-            url: 'https://met4kantin.herokuapp.com/api/history/transfer/in',
+            url: 'https://coinless.herokuapp.com/api/history/transfer/in',
             dataType: "json",
             beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
@@ -268,7 +205,7 @@
         // transfer out
         $.ajax({
             type: 'GET',
-            url: 'https://met4kantin.herokuapp.com/api/history/transfer/out',
+            url: 'https://coinless.herokuapp.com/api/history/transfer/out',
             dataType: "json",
             beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
@@ -304,7 +241,7 @@
         // topup
         $.ajax({
             type: 'GET',
-            url: 'https://met4kantin.herokuapp.com/api/history/topup',
+            url: 'https://coinless.herokuapp.com/api/history/topup',
             dataType: "json",
             beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
@@ -340,18 +277,18 @@
         // user
         $.ajax({
             type: 'GET',
-            url: 'https://met4kantin.herokuapp.com/api/profile',
+            url: 'https://coinless.herokuapp.com/api/profile',
             dataType: "json",
             beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenCoin);
                 },
             success: function (data) {
                 console.log(data);
                 if (data) {
                     $('#nama').html('Hello, ' + data.data.name);
-                    $('#uid').html('ID: '+data.data.uid);
-                    $('#cash').html('Meta Money: ' + data.data.cash);
-                    idUser = data.data.uid;
+                    $('#id').html('ID: '+data.data.id_user);
+                    $('#cash').html('Meta Money: ' + data.data.saldo);
+                    idUser = data.data.id_user;
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -369,7 +306,7 @@
             success: function (data) {
                 console.log(data);
                 if (data) {
-                    $('#cashE').html('Ecia Money: ' + data.jumlah);
+                    $('#cashE').html('Saldo Ecia: ' + data.jumlah);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -379,15 +316,15 @@
 
         $.ajax({
             type: 'GET',
-            url: 'https://harpay-api.herokuapp.com/transaksi/cekSaldo',
+            url: 'https://egilwallet.herokuapp.com/api/profile',
             dataType: "json",
             beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenHarpay);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenEgil);
                 },
             success: function (data) {
                 console.log(data);
                 if (data) {
-                    $('#cashH').html('Harpay Money: ' + data.saldo);
+                    $('#cashG').html('Saldo Egil: ' + data.balance);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -423,12 +360,12 @@
 
         $.ajax({
           type: "PUT",
-          url: "https://met4kantin.herokuapp.com/api/profile/" + idUser,
+          url: "https://coinless.herokuapp.com/api/profile/" + idUser,
           data: formData,
           dataType: "json",
           encode: true,
           beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenMeta);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + tokenCoin);
                 },
           success: function(data) {
             alert(data.message);
