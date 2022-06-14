@@ -568,7 +568,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                       const walletEcia = rass.data.nomor_wallet;
                       const payloadBeli = {
                         id_user: idEcia,
-                        nama_barang: result.rows[0]['nama'],
+                        nama_barang: result.rows[0]['nama_barang'],
                         harga: harga,
                         nomor_wallet: walletEcia,
                       };
@@ -579,7 +579,7 @@ router.post('/api/transaksi', verifyToken, async (req, res, next) => {
                             // melakukan pembayaran akhir dari pembayaran sebelumnya
                             const idBarang = riss.data.id_pemesanan;
                             const payloadBayar = {
-                              jumlah: harga,
+                              harga: harga,
                               nomor_wallet_client: walletEcia,
                               referensi: idBarang,
                             };
