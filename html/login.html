@@ -176,7 +176,7 @@
               encode: true,
               success: function(data) {
                 document.cookie = "masuk=" + data.jwt;
-                window.location = "https://coinless.herokuapp.com/kantin";
+                window.location = "https://coinless.herokuapp.com/toko";
               },
               error: function(jqXHR, textStatus, errorThrown) {
                 const myObj = JSON.parse(jqXHR.responseText);     
