@@ -10,9 +10,6 @@ const client = require('../db/conn.js');
 const config = require('../config');
 const axios = require('axios');
 
-app.get('/style.css', (req, res) => {
-  res.sendFile("/app/html/css/style.css");
-}); 
 
 module.exports = router;
 
