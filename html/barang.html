@@ -52,7 +52,7 @@
     <script>
         $.ajax({
             type: 'GET',
-            url: 'https://met4kantin.herokuapp.com/api/kantin',
+            url: 'https://coinless.herokuapp.com/api/barang',
             dataType: "json", //to parse string into JSON object,
             success: function (data) {
                 if (data) {
@@ -62,10 +62,10 @@
                             '<div class="card mx-auto mt-4" style="width: 18rem;">' +
                             '<img src="https://via.placeholder.com/150" class="card-img-top" alt="...">' +
                             '<div class="card-body">' +
-                            '<h5 class="card-title">' + data[i].nama + '</h5>' +
+                            '<h5 class="card-title">' + data[i].nama_barang + '</h5>' +
                             '<h6 class="card-subtitle mb-2 text-muted">' + data[i].kode + '</h6>' +
                             '<p class="card-text">' + data[i].lokasi + '</p>' +
-                            '<a href="/kantin/' + data[i].kode + '"' + 'class="btn btn-primary">Bayar</a>' +
+                            '<a href="/barang/' + data[i].kode + '"' + 'class="btn btn-primary">Bayar</a>' +
                             '</div>' +
                             '</div>' +
                             '</div>'

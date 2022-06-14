@@ -955,7 +955,7 @@ router.get('/api/barang/buy/:id_barang', (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     const {id_barang} = req.params;
-    client.query('SELECT nama, harga, id_barang FROM barang WHERE id_barang = $1', [id_barang], (errror, result) => {
+    client.query('SELECT nama_barang, harga, id_barang FROM barang WHERE id_barang = $1', [id_barang], (errror, result) => {
       if (result.rowCount > 0) {
         res.setHeader('Content-Type', 'application/json');
         res.status(200);
