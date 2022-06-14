@@ -41,13 +41,13 @@ router.get('/my', (req, res, next) => {
 });
 
 router.get('/barang/:id_barang', (req, res, next) => {
-  const {fuid} = req.params;
-  url = 'https://met4kantin.herokuapp.com/api/foods/buy/' + fuid;
+  const {id_barang} = req.params;
+  url = 'https://coinless.herokuapp.com/api/barang/buy/' + id_barang;
   res.setHeader('Access-Control-Allow-Origin', '*');
   axios
       .get(url)
       .then((ress) => {
-        res.render('/app/views/baranView.ejs', ress.data.data);
+        res.render('/app/views/barangView.ejs', ress.data.data);
       })
       .catch((error) => {
         console.log(error);
