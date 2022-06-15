@@ -40,7 +40,7 @@ router.get('/my', (req, res, next) => {
   res.sendFile('/app/html/profile.html');
 });
 
-router.get('/barang/:id_barang', (req, res, next) => {
+router.get('/toko/:id_barang', (req, res, next) => {
   const {id_barang} = req.params;
   url = 'https://coinless.herokuapp.com/api/barang/buy/' + id_barang;
   res.setHeader('Access-Control-Allow-Origin', '*');
