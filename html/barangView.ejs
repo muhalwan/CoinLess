@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <title>MetaKantin</title>
+    <title>CoinLess</title>
     <style>
         .kembali {
             transition: transform 200ms;
@@ -24,38 +24,16 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a href="" class="kembali"><i class="bi bi-chevron-double-left text-white mr-3"></i></a>
-        <a class="navbar-brand" href="/">MetaKantin</a>
+        <a class="navbar-brand" href="/">CoinLess</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-contr
             ols="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Pricing</a>
-                </li>
-            </ul> -->
-
-            <!-- <ul class="navbar-nav ml-auto">
-                <div class="dropdown-divider"></div>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
-                </li>
-            </ul> -->
         </div>
     </nav>
 
-    <div class="jumbotron jumbotron-fluid"
-        style="background-image: url('https://images.pexels.com/photos/4226806/pexels-photo-4226806.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'); background-size: cover;">
+    <div class="jumbotron jumbotron-fluid"></div>
         <div class="container">
             <h1 class="display-4 text-center">
                 <%=nama %>
@@ -76,7 +54,7 @@
         <div class="row justify-content-center">
             <div class="col-md-auto my-3">
                 <button class="btn btn-primary btn-block btn-lg" type="button" data-toggle="collapse" data-target="#MetaMoneyPay" aria-expanded="false" aria-controls="collapseExample">
-                    MetaMoney
+                    CoinLess
                 </button>
             </div>
             <div class="col-md-auto my-3">
@@ -97,8 +75,7 @@
         </div>
         <form action="/api/pay" method="post" class="collapse" id="MetaMoneyPay">
             <div class="my-5">
-                <h2 class="display-4">Meta Money</h2>
-                <p>Use our build-in E-money!</p>
+                <h2 class="display-4">CoinLess</h2>
             </div>
             <div class="form-group">
                 <label for="emoney">Metode Bayar</label>
