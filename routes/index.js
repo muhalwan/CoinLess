@@ -1,58 +1,45 @@
-const verifyToken = require('../auth/verify');
-const jwt = require('jsonwebtoken');
 const express = require('express');
-const { nanoid } = require('nanoid');
 const router = express.Router();
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
-const moment = require('moment');
-const client = require('../db/conn.js');
-const config = require('../config');
-const axios = require('axios');
 const path = require('path');
+const axios = require('axios');
 
-module.exports = router;
-
-router.use(jsonParser);
-
-router.get('/', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../html/index.html'));
-});
-
+// Serve the frontend HTML files
 router.get('/register', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../html/register.html'));
+  res.sendFile(path.join(__dirname, '../public/register.html'));
 });
 
 router.get('/login', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../html/login.html'));
+  res.sendFile(path.join(__dirname, '../public/login.html'));
 });
 
 router.get('/toko', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../html/toko.html'));
+  res.sendFile(path.join(__dirname, '../public/toko.html'));
 });
 
 router.get('/my', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../html/profile.html'));
+  res.sendFile(path.join(__dirname, '../public/profile.html'));
 });
 
 router.get('/toko/:id_barang', (req, res, next) => {
-  const {id_barang} = req.params;
-  url = 'https://coinless.herokuapp.com/api/barang/buy/' + id_barang;
+  const { id_barang } = req.params;
+  const url = `https://coinless.herokuapp.com/api/barang/buy/${id_barang}`;
   res.setHeader('Access-Control-Allow-Origin', '*');
   axios
-      .get(url)
-      .then((ress) => {
-        res.render('/app/views/barangView.ejs', ress.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    .get(url)
+    .then((response) => {
+      res.render(path.join(__dirname, '../views/barangView.ejs'), response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send('Internal Server Error');
+    });
 });
+
+module.exports = router;
 
 // show all users
 router.get('/api/profile', verifyToken, (req, res, next) => {
