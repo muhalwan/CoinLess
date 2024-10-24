@@ -1,7 +1,7 @@
 const verifyToken = require('../auth/verify');
 const jwt = require('jsonwebtoken');
 const express = require('express');
-const {nanoid} = require('nanoid');
+const { nanoid } = require('nanoid');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
@@ -9,7 +9,7 @@ const moment = require('moment');
 const client = require('../db/conn.js');
 const config = require('../config');
 const axios = require('axios');
-
+const path = require('path');
 
 module.exports = router;
 
@@ -17,27 +17,27 @@ router.use(jsonParser);
 
 router.get('/', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/index.html');
+  res.sendFile(path.join(__dirname, '../html/index.html'));
 });
 
 router.get('/register', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/register.html');
+  res.sendFile(path.join(__dirname, '../html/register.html'));
 });
 
 router.get('/login', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/login.html');
+  res.sendFile(path.join(__dirname, '../html/login.html'));
 });
 
 router.get('/toko', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/toko.html');
+  res.sendFile(path.join(__dirname, '../html/toko.html'));
 });
 
 router.get('/my', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile('/app/html/profile.html');
+  res.sendFile(path.join(__dirname, '../html/profile.html'));
 });
 
 router.get('/toko/:id_barang', (req, res, next) => {
