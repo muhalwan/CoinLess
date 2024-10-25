@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const axios = require('axios');
+const verifyToken = require('../auth/verify');
+const client = require('../db/conn');
+
+module.exports = router;
 
 // Serve the frontend HTML files
 router.get('/register', (req, res, next) => {
@@ -39,14 +43,21 @@ router.get('/toko/:id_barang', (req, res, next) => {
     });
 });
 
-module.exports = router;
-
-// show all users
-router.get('/api/profile', verifyToken, (req, res, next) => {
+// Show all users
+router.get('/api/profile', verifyToken, (req, res) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.role === 'admin') {
       client.query('SELECT * FROM users', (error, result) => {
+        if (error) {
+          res.setHeader('Content-Type', 'application/json');
+          res.status(500);
+          return res.json({
+            status: 500,
+            message: 'Internal Server Error',
+            error: error.message,
+          });
+        }
         if (result.rowCount > 0) {
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
@@ -63,52 +74,47 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
           message: 'User Kosong',
           data: [],
         });
-      });  
+      });
     } else {
       client.query(
-          'SELECT * FROM users WHERE id_user = $1',
-          [req.id_user],
-          (error, result) => {
-            //console.log(result);
-            if (result.rows[0] !== undefined) {
-              const myname = result.rows[0].name;
-              const myemail = result.rows[0].email;
-              const mypass = result.rows[0].pass;
-              const mycash = result.rows[0].saldo;
-              const myuid = result.rows[0].id_user;
-              const mywallet = result.rows[0].nomor_wallet;
-              res.setHeader('Content-Type', 'application/json');
-              res.status(200);
-              return res
-                  .send(
-                      JSON.stringify(
-                          {
-                            id_user: myuid,
-                            name: myname,
-                            pass: mypass,
-                            email: myemail,
-                            saldo: mycash,
-                            nomor_wallet: mywallet,    
-                          },
-                          null,
-                          3,
-                      ),
-                  );
-            }
+        'SELECT * FROM users WHERE id_user = $1',
+        [req.id_user],
+        (error, result) => {
+          if (error) {
             res.setHeader('Content-Type', 'application/json');
-            res.status(400);
-            return res
-                .send(
-                    JSON.stringify(
-                        {
-                          status: 400,
-                          message: 'User tidak ditemukan',
-                        },
-                        null,
-                        3,
-                    ),
-                );
-          },
+            res.status(500);
+            return res.json({
+              status: 500,
+              message: 'Internal Server Error',
+              error: error.message,
+            });
+          }
+          if (result.rows[0] !== undefined) {
+            const myname = result.rows[0].name;
+            const myemail = result.rows[0].email;
+            const mypass = result.rows[0].pass;
+            const mycash = result.rows[0].saldo;
+            const myuid = result.rows[0].id_user;
+            const mywallet = result.rows[0].nomor_wallet;
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200);
+            return res.json({
+              id_user: myuid,
+              name: myname,
+              pass: mypass,
+              email: myemail,
+              saldo: mycash,
+              nomor_wallet: mywallet,
+            });
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+            res.status(404);
+            return res.json({
+              status: 404,
+              message: 'User not found',
+            });
+          }
+        }
       );
     }
   } catch (error) {
@@ -117,7 +123,8 @@ router.get('/api/profile', verifyToken, (req, res, next) => {
     res.status(500);
     return res.json({
       status: 500,
-      message: 'Server error',
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
 });
