@@ -1,63 +1,65 @@
-const express = require('express');
-const router = express.Router();
-const path = require('path');
-const axios = require('axios');
 const verifyToken = require('../auth/verify');
-const client = require('../db/conn');
+const jwt = require('jsonwebtoken');
+const express = require('express');
+const {nanoid} = require('nanoid');
+const router = express.Router();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+const moment = require('moment');
+const client = require('../db/conn.js');
+const config = require('../config');
+const axios = require('axios');
+
 
 module.exports = router;
 
-// Serve the frontend HTML files
+router.use(jsonParser);
+
+router.get('/', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.sendFile('/app/html/index.html');
+});
+
 router.get('/register', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../public/register.html'));
+  res.sendFile('/app/html/register.html');
 });
 
 router.get('/login', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../public/login.html'));
+  res.sendFile('/app/html/login.html');
 });
 
 router.get('/toko', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../public/toko.html'));
+  res.sendFile('/app/html/toko.html');
 });
 
 router.get('/my', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.sendFile(path.join(__dirname, '../public/profile.html'));
+  res.sendFile('/app/html/profile.html');
 });
 
 router.get('/toko/:id_barang', (req, res, next) => {
-  const { id_barang } = req.params;
-  const url = `https://coinless.herokuapp.com/api/barang/buy/${id_barang}`;
+  const {id_barang} = req.params;
+  url = 'https://coinless.herokuapp.com/api/barang/buy/' + id_barang;
   res.setHeader('Access-Control-Allow-Origin', '*');
   axios
-    .get(url)
-    .then((response) => {
-      res.render(path.join(__dirname, '../views/barangView.ejs'), response.data.data);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send('Internal Server Error');
-    });
+      .get(url)
+      .then((ress) => {
+        res.render('/app/views/barangView.ejs', ress.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 });
 
-// Show all users
-router.get('/api/profile', verifyToken, (req, res) => {
+// show all users
+router.get('/api/profile', verifyToken, (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.role === 'admin') {
       client.query('SELECT * FROM users', (error, result) => {
-        if (error) {
-          res.setHeader('Content-Type', 'application/json');
-          res.status(500);
-          return res.json({
-            status: 500,
-            message: 'Internal Server Error',
-            error: error.message,
-          });
-        }
         if (result.rowCount > 0) {
           res.setHeader('Content-Type', 'application/json');
           res.status(200);
@@ -74,47 +76,52 @@ router.get('/api/profile', verifyToken, (req, res) => {
           message: 'User Kosong',
           data: [],
         });
-      });
+      });  
     } else {
       client.query(
-        'SELECT * FROM users WHERE id_user = $1',
-        [req.id_user],
-        (error, result) => {
-          if (error) {
+          'SELECT * FROM users WHERE id_user = $1',
+          [req.id_user],
+          (error, result) => {
+            //console.log(result);
+            if (result.rows[0] !== undefined) {
+              const myname = result.rows[0].name;
+              const myemail = result.rows[0].email;
+              const mypass = result.rows[0].pass;
+              const mycash = result.rows[0].saldo;
+              const myuid = result.rows[0].id_user;
+              const mywallet = result.rows[0].nomor_wallet;
+              res.setHeader('Content-Type', 'application/json');
+              res.status(200);
+              return res
+                  .send(
+                      JSON.stringify(
+                          {
+                            id_user: myuid,
+                            name: myname,
+                            pass: mypass,
+                            email: myemail,
+                            saldo: mycash,
+                            nomor_wallet: mywallet,    
+                          },
+                          null,
+                          3,
+                      ),
+                  );
+            }
             res.setHeader('Content-Type', 'application/json');
-            res.status(500);
-            return res.json({
-              status: 500,
-              message: 'Internal Server Error',
-              error: error.message,
-            });
-          }
-          if (result.rows[0] !== undefined) {
-            const myname = result.rows[0].name;
-            const myemail = result.rows[0].email;
-            const mypass = result.rows[0].pass;
-            const mycash = result.rows[0].saldo;
-            const myuid = result.rows[0].id_user;
-            const mywallet = result.rows[0].nomor_wallet;
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200);
-            return res.json({
-              id_user: myuid,
-              name: myname,
-              pass: mypass,
-              email: myemail,
-              saldo: mycash,
-              nomor_wallet: mywallet,
-            });
-          } else {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(404);
-            return res.json({
-              status: 404,
-              message: 'User not found',
-            });
-          }
-        }
+            res.status(400);
+            return res
+                .send(
+                    JSON.stringify(
+                        {
+                          status: 400,
+                          message: 'User tidak ditemukan',
+                        },
+                        null,
+                        3,
+                    ),
+                );
+          },
       );
     }
   } catch (error) {
@@ -123,8 +130,7 @@ router.get('/api/profile', verifyToken, (req, res) => {
     res.status(500);
     return res.json({
       status: 500,
-      message: 'Internal Server Error',
-      error: error.message,
+      message: 'Server error',
     });
   }
 });
