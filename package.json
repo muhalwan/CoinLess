@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "animate.css": "^4.1.1",
-    "axios": "^1.7.7",
+    "axios": "^0.27.2",
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.8.1",
     "cheerio": "^1.0.0-rc.10",
@@ -27,12 +27,11 @@
     "hammerjs": "^2.0.8",
     "https": "^1.0.0",
     "jquery": "^3.6.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "8.5.1",
     "materialize-css": "^1.0.0",
-    "moment": "^2.30.1",
+    "moment": "2.29.3",
     "mysql": "2.18.1",
     "nanoid": "^3.3.4",
-    "nodemon": "^3.1.7",
     "pg": "^8.7.3",
     "url": "^0.11.0",
     "uuid": "8.3.2"
@@ -41,7 +40,7 @@
     "node": ">=14.x"
   },
   "devDependencies": {
-    "eslint": "^9.13.0",
+    "eslint": "^8.16.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.26.0"
