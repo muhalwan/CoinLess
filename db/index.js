@@ -1,12 +1,17 @@
-const mysql = require('pg');
+const { MongoClient } = require('mongodb');
+const config = require('../config/mongodb');
 
-const config = {
-  host: 'bnelnjnmszopqkmmj9yf-postgresql.services.clever-cloud.com',
-  user: 'udow0xy7yma3b9qqi1vc',
-  password: '7OD5izBTuJ8DPYd7lznw',
-  database: 'bnelnjnmszopqkmmj9yf',
-};
+const client = new MongoClient(config.uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const pool = mysql.createPool(config);
+async function connect() {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB Atlas');
+    return client.db(config.dbName);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+}
 
-module.exports = pool;
+module.exports = connect;
